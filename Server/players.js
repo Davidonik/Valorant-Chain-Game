@@ -872,20 +872,20 @@ const PLAYERS = sortObjectKeys({
 
   pAura: {
     teammates: {
-      Turko:     ["SuperMassive Blaze"],
-      russ:      ["SuperMassive Blaze"],
-      Izzy:      ["SuperMassive Blaze"],
-      Brave:     ["SuperMassive Blaze", "BBL Esports"],
-      QutionerX: ["BBL Esports"],
-      Elite:     ["BBL Esports"],
-      reazy:     ["BBL Esports"],
+      Turko:       ["SuperMassive Blaze"],
+      "Russ (TR)": ["SuperMassive Blaze"],
+      Izzy:        ["SuperMassive Blaze"],
+      Brave:       ["SuperMassive Blaze", "BBL Esports"],
+      QutionerX:   ["BBL Esports"],
+      Elite:       ["BBL Esports"],
+      reazy:       ["BBL Esports"],
     }
   },
 
   Turko: {
     teammates: {
       pAura:         ["SuperMassive Blaze"],
-      russ:          ["SuperMassive Blaze"],
+      "Russ (TR)":   ["SuperMassive Blaze"],
       Izzy:          ["SuperMassive Blaze"],
       Brave:         ["SuperMassive Blaze", "BBL Esports"],
       AsLanM4shadoW: ["BBL Esports"],
@@ -894,7 +894,7 @@ const PLAYERS = sortObjectKeys({
     }
   },
 
-  russ: {
+  "Russ (TR)": {
     teammates: {
       pAura: ["SuperMassive Blaze"],
       Turko: ["SuperMassive Blaze"],
@@ -905,15 +905,15 @@ const PLAYERS = sortObjectKeys({
 
   Izzy: {
     teammates: {
-      pAura:  ["SuperMassive Blaze"],
-      Turko:  ["SuperMassive Blaze"],
-      russ:   ["SuperMassive Blaze"],
-      Brave:  ["SuperMassive Blaze"],
-      echo:   ["Eternal Fire"],
-      nekky:  ["Eternal Fire"],
-      audaz:  ["Eternal Fire"],
-      Favian: ["Eternal Fire"],
-      Spear:  ["Eternal Fire"],
+      pAura:       ["SuperMassive Blaze"],
+      Turko:       ["SuperMassive Blaze"],
+      "Russ (TR)": ["SuperMassive Blaze"],
+      Brave:       ["SuperMassive Blaze"],
+      echo:        ["Eternal Fire"],
+      nekky:       ["Eternal Fire"],
+      audaz:       ["Eternal Fire"],
+      Favian:      ["Eternal Fire"],
+      Spear:       ["Eternal Fire"],
     }
   },
 
@@ -921,7 +921,7 @@ const PLAYERS = sortObjectKeys({
     teammates: {
       pAura:         ["SuperMassive Blaze", "BBL Esports"],
       Turko:         ["SuperMassive Blaze", "BBL Esports"],
-      russ:          ["SuperMassive Blaze"],
+      "Russ (TR)":   ["SuperMassive Blaze"],
       Izzy:          ["SuperMassive Blaze"],
       AsLanM4shadoW: ["BBL Esports"],
       QutionerX:     ["BBL Esports"],
@@ -1063,17 +1063,17 @@ const PLAYERS = sortObjectKeys({
 
   koldamenta: {
     teammates: {
-      Leo:     ["Guild Esports"],
-      Sayf:    ["Guild Esports"],
-      Russ:    ["Guild Esports"],
-      trexx:   ["Guild Esports", "KOI"],
-      mixwell: ["G2 Esports"],
-      nukkye:  ["G2 Esports"],
-      AvovA:   ["G2 Esports"],
-      keloqz:  ["G2 Esports"],
-      Sheydos: ["KOI"],
-      Wolfen:  ["KOI"],
-      starxo:  ["KOI"],
+      Leo:         ["Guild Esports"],
+      Sayf:        ["Guild Esports"],
+      "Russ (UK)": ["Guild Esports"],
+      trexx:       ["Guild Esports", "KOI"],
+      mixwell:     ["G2 Esports"],
+      nukkye:      ["G2 Esports"],
+      AvovA:       ["G2 Esports"],
+      keloqz:      ["G2 Esports"],
+      Sheydos:     ["KOI"],
+      Wolfen:      ["KOI"],
+      starxo:      ["KOI"],
     }
   },
 
@@ -1687,7 +1687,7 @@ const PLAYERS = sortObjectKeys({
       something:     ["Paper Rex"],
       CigaretteS:    ["Paper Rex"],
       Lightningfast: ["Global Esports"],
-      Russ:          ["Global Esports"],
+      "Russ (UK)":   ["Global Esports"],
       blaZek1ng:     ["Global Esports"],
       Polvi:         ["Global Esports"],
     }
@@ -2649,42 +2649,42 @@ const PLAYERS = sortObjectKeys({
 
   Leo: {
     teammates: {
-      Sayf:       ["Guild Esports"],
-      koldamenta: ["Guild Esports"],
-      Russ:       ["Guild Esports"],
-      trexx:      ["Guild Esports"],
-      Boaster:    ["Fnatic"],
-      Derke:      ["Fnatic"],
-      Alfajer:    ["Fnatic"],
-      Chronicle:  ["Fnatic"],
-      kamyk:      ["Fnatic"],
+      Sayf:        ["Guild Esports"],
+      koldamenta:  ["Guild Esports"],
+      "Russ (UK)": ["Guild Esports"],
+      trexx:       ["Guild Esports"],
+      Boaster:     ["Fnatic"],
+      Derke:       ["Fnatic"],
+      Alfajer:     ["Fnatic"],
+      Chronicle:   ["Fnatic"],
+      kamyk:       ["Fnatic"],
     }
   },
 
   Sayf: {
     teammates: {
-      Leo:        ["Guild Esports"],
-      koldamenta: ["Guild Esports"],
-      Russ:       ["Guild Esports"],
-      trexx:      ["Guild Esports", "Team Vitality"],
-      soulcas:    ["Team Liquid"],
-      Jamppi:     ["Team Liquid"],
-      Redgar:     ["Team Liquid"],
-      nAts:       ["Team Liquid"],
-      Harmii:     ["Team Liquid"],
-      ceNder:     ["Team Vitality"],
-      runneR:     ["Team Vitality"],
-      Kicks:      ["Team Vitality"],
-      Destrian:   ["Team Vitality"],
-      Less:       ["Team Vitality"],
-      Derke:      ["Team Vitality"],
-      CyvOph:     ["Team Vitality"],
-      UNFAKE:     ["Team Vitality"],
-      KovaQ:      ["Team Vitality"],
+      Leo:         ["Guild Esports"],
+      koldamenta:  ["Guild Esports"],
+      "Russ (UK)": ["Guild Esports"],
+      trexx:       ["Guild Esports", "Team Vitality"],
+      soulcas:     ["Team Liquid"],
+      Jamppi:      ["Team Liquid"],
+      Redgar:      ["Team Liquid"],
+      nAts:        ["Team Liquid"],
+      Harmii:      ["Team Liquid"],
+      ceNder:      ["Team Vitality"],
+      runneR:      ["Team Vitality"],
+      Kicks:       ["Team Vitality"],
+      Destrian:    ["Team Vitality"],
+      Less:        ["Team Vitality"],
+      Derke:       ["Team Vitality"],
+      CyvOph:      ["Team Vitality"],
+      UNFAKE:      ["Team Vitality"],
+      KovaQ:       ["Team Vitality"],
     }
   },
 
-  Russ: {
+  "Russ (UK)": {
     teammates: {
       Leo:           ["Guild Esports"],
       Sayf:          ["Guild Esports"],
@@ -2699,24 +2699,24 @@ const PLAYERS = sortObjectKeys({
 
   trexx: {
     teammates: {
-      Leo:        ["Guild Esports"],
-      Sayf:       ["Guild Esports", "Team Vitality"],
-      koldamenta: ["Guild Esports", "KOI"],
-      Russ:       ["Guild Esports"],
-      Sheydos:    ["KOI"],
-      Wolfen:     ["KOI"],
-      starxo:     ["KOI"],
-      ceNder:     ["Team Vitality"],
-      runneR:     ["Team Vitality"],
-      Kicks:      ["Team Vitality", "Team Liquid"],
-      Less:       ["Team Vitality"],
-      Derke:      ["Team Vitality"],
-      nAts:       ["Team Liquid"],
-      Keiko:      ["Team Liquid"],
-      kamo:       ["Team Liquid"],
-      paTiTek:    ["Team Liquid"],
-      purp0:      ["Team Liquid"],
-      GSR:        ["Team Liquid"],
+      Leo:         ["Guild Esports"],
+      Sayf:        ["Guild Esports", "Team Vitality"],
+      koldamenta:  ["Guild Esports", "KOI"],
+      "Russ (UK)": ["Guild Esports"],
+      Sheydos:     ["KOI"],
+      Wolfen:      ["KOI"],
+      starxo:      ["KOI"],
+      ceNder:      ["Team Vitality"],
+      runneR:      ["Team Vitality"],
+      Kicks:       ["Team Vitality", "Team Liquid"],
+      Less:        ["Team Vitality"],
+      Derke:       ["Team Vitality"],
+      nAts:        ["Team Liquid"],
+      Keiko:       ["Team Liquid"],
+      kamo:        ["Team Liquid"],
+      paTiTek:     ["Team Liquid"],
+      purp0:       ["Team Liquid"],
+      GSR:         ["Team Liquid"],
     }
   },
 
@@ -2986,7 +2986,7 @@ const PLAYERS = sortObjectKeys({
       Tehbotol:      ["BOOM Esports"],
       famouz:        ["BOOM Esports"],
       Lightningfast: ["Global Esports"],
-      Russ:          ["Global Esports"],
+      "Russ (UK)":   ["Global Esports"],
       Polvi:         ["Global Esports"],
       Benkai:        ["Global Esports"],
     }
@@ -3857,16 +3857,16 @@ const PLAYERS = sortObjectKeys({
 
   Lightningfast: {
     teammates: {
-      SkRossi:   ["Global Esports"],
-      AYRIN:     ["Global Esports"],
-      t3xture:   ["Global Esports"],
-      Monyet:    ["Global Esports"],
-      Bazzi:     ["Global Esports"],
-      WRONSKI:   ["Global Esports"],
-      Russ:      ["Global Esports"],
-      blaZek1ng: ["Global Esports"],
-      Polvi:     ["Global Esports"],
-      Benkai:    ["Global Esports"],
+      SkRossi:     ["Global Esports"],
+      AYRIN:       ["Global Esports"],
+      t3xture:     ["Global Esports"],
+      Monyet:      ["Global Esports"],
+      Bazzi:       ["Global Esports"],
+      WRONSKI:     ["Global Esports"],
+      "Russ (UK)": ["Global Esports"],
+      blaZek1ng:   ["Global Esports"],
+      Polvi:       ["Global Esports"],
+      Benkai:      ["Global Esports"],
     }
   },
 
@@ -4323,7 +4323,7 @@ const PLAYERS = sortObjectKeys({
   Polvi: {
     teammates: {
       Lightningfast: ["Global Esports"],
-      Russ:          ["Global Esports"],
+      "Russ (UK)":   ["Global Esports"],
       blaZek1ng:     ["Global Esports"],
       Benkai:        ["Global Esports"],
     }

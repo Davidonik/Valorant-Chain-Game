@@ -5,14 +5,19 @@ function normalize(str) {
 }
 
 function findPlayer(input) {
+  if (typeof input !== "string") return null;
+
   const n = normalize(input);
+  if (!n) return null;
+
   const all = Object.keys(PLAYERS);
 
   const exact = all.find((p) => normalize(p) === n);
   if (exact) return exact;
 
-  const sub = all.find((p) => normalize(p).includes(n));
-  if (sub) return sub;
+  // Only accept a partial name when it points to exactly one player
+  const partial = all.filter((p) => normalize(p).includes(n));
+  if (partial.length === 1) return partial[0];
 
   return null;
 }

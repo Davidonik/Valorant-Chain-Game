@@ -1,0 +1,281 @@
+/* ── Reset / Base ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0f14;
+  --surface: #1a1a24;
+  --border: #2e2e40;
+  --accent: #ff4655;       /* Valorant red */
+  --accent2: #00d4aa;      /* teal for "mine" */
+  --text: #e8e8f0;
+  --muted: #888899;
+  --radius: 10px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  min-height: 100dvh;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 24px 16px 48px;
+}
+
+/* ── Page base ─────────────────────────────────────────────────────────────── */
+.page {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── Typography ────────────────────────────────────────────────────────────── */
+.title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--accent);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ── Card ──────────────────────────────────────────────────────────────────── */
+.card {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Input ─────────────────────────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 1rem;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.input:focus { border-color: var(--accent); }
+.input::placeholder { color: var(--muted); }
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover:not(:disabled) { opacity: 0.88; }
+
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); }
+
+.btn-ghost { background: transparent; color: var(--muted); font-size: 0.9rem; padding: 8px 16px; }
+.btn-ghost:hover { color: var(--text); }
+
+.btn-row { display: flex; gap: 10px; }
+.btn-row .btn { flex: 1; }
+
+/* ── Error ─────────────────────────────────────────────────────────────────── */
+.error { color: var(--accent); font-size: 0.88rem; }
+
+/* ── Lobby ─────────────────────────────────────────────────────────────────── */
+.room-code {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 8px;
+  text-align: center;
+  color: var(--accent);
+  cursor: pointer;
+  user-select: all;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.room-code:hover { background: var(--border); }
+
+.hint { text-align: center; color: var(--muted); font-size: 0.82rem; }
+.waiting-text { text-align: center; color: var(--muted); }
+
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 4px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Game page ─────────────────────────────────────────────────────────────── */
+.game-page { gap: 14px; }
+
+.game-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.player-badge {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.player-badge.me { background: #1a3a30; color: var(--accent2); }
+.player-badge.opp { background: #3a1a1e; color: var(--accent); }
+
+.vs-badge { font-weight: 800; color: var(--muted); font-size: 0.85rem; }
+
+/* Timer */
+.timer-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+.timer-bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timer-bar {
+  height: 100%;
+  background: var(--accent2);
+  border-radius: 4px;
+  transition: width 1s linear, background 0.3s;
+}
+.timer-bar.urgent { background: var(--accent); }
+.timer-bar.active { }
+
+.timer-number { font-size: 0.85rem; color: var(--muted); }
+.timer-number.urgent { color: var(--accent); font-weight: 700; }
+
+/* Turn label */
+.turn-label {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 20px;
+}
+.turn-label.my-turn { background: #1a3a30; color: var(--accent2); }
+.turn-label.their-turn { background: var(--surface); color: var(--muted); }
+
+/* Current player box */
+.current-player-box {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--muted);
+}
+.highlight { color: var(--text); font-weight: 700; font-size: 1.1rem; }
+.avail-count { color: var(--muted); font-size: 0.85rem; }
+
+/* Input row */
+.input-row { width: 100%; display: flex; gap: 8px; }
+.input-row .game-input { flex: 1; }
+
+.game-message {
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 1.2em;
+}
+
+/* ── Chain ─────────────────────────────────────────────────────────────────── */
+.chain-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
+
+.chain-entry {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.chain-entry.seed { margin-bottom: 4px; }
+
+.chain-player {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.chain-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+.chain-meta {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.chain-arrow { color: var(--border); font-size: 1rem; }
+
+.chain-entry.mine .chain-player { color: var(--accent2); }
+.chain-entry.theirs .chain-player { color: var(--accent); }
+
+/* ── GameOver ──────────────────────────────────────────────────────────────── */
+.result-banner {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  padding: 20px;
+  border-radius: var(--radius);
+}
+.result-banner.win { background: #1a3a30; color: var(--accent2); }
+.result-banner.lose { background: #3a1a1e; color: var(--accent); }
+
+.reason-text { color: var(--muted); font-size: 0.9rem; }
+
+.rematch-row { display: flex; gap: 12px; align-items: center; }
+
+.chain-recap { width: 100%; }
+.chain-recap h3 { text-align: center; color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }

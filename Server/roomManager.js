@@ -1,4 +1,4 @@
-const { validateSubmission, getRandomStarter, getTeammates } = require("./gameLogic");
+const { validateSubmission, getRandomStarter, getTeammates, getSharedTeams } = require("./gameLogic");
 
 // ---------------------------------------------------------------------------
 // In-memory room store
@@ -13,7 +13,7 @@ const rooms = new Map();
 function generateRoomCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no I/O/0/1 to avoid confusion
   let code = "";
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 5; i++) {
     code += chars[Math.floor(Math.random() * chars.length)];
   }
   return rooms.has(code) ? generateRoomCode() : code;
@@ -55,8 +55,22 @@ function startTurnTimer(io, code, room) {
 
     if (!loser || !winner) return;
 
+    // What the loser could have answered
+    const currentPlayer =
+      room.chain.length > 0
+        ? room.chain[room.chain.length - 1].canonicalName
+        : room.seedPlayer;
+    const missedAnswers = getTeammates(currentPlayer)
+      .filter((t) => !room.usedPlayers.includes(t))
+      .map((t) => ({
+        name: t,
+        teams: getSharedTeams(currentPlayer, t).join(", "),
+      }));
+
     io.to(code).emit("game_over", {
       reason: "timeout",
+      currentPlayer,
+      missedAnswers,
       loserId: loser.id,
       loserName: loser.name,
       winnerId: winner.id,
@@ -78,11 +92,12 @@ function startTurnTimer(io, code, room) {
 function handleSocketEvents(io, socket) {
 
   // ── CREATE ROOM ────────────────────────────────────────────────────────────
-  socket.on("create_room", ({ playerName }, callback) => {
+  socket.on("create_room", ({ playerName, region }, callback) => {
     const code = generateRoomCode();
 
     const room = {
       code,
+      region: region ?? null,  // null = any region
       status: "waiting",       // waiting | playing | finished
       players: [{ id: socket.id, name: playerName }],
       activePlayerId: null,
@@ -246,7 +261,7 @@ function handleSocketEvents(io, socket) {
 // ---------------------------------------------------------------------------
 
 function startGame(io, code, room) {
-  const starter = getRandomStarter();
+  const starter = getRandomStarter(room.region);
 
   room.status = "playing";
   room.chain = [];

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import socket from "./socket";
 import Home from "./pages/Home";
 import Lobby from "./pages/Lobby";
 import Game from "./pages/Game";
@@ -14,15 +15,21 @@ export default function App() {
   const [gameState, setGameState] = useState(null);   // from game_start
   const [result, setResult] = useState(null);         // from game_over
 
+  // Listen here (not in Lobby/GameOver) so the event can't arrive before a
+  // page has mounted — the joiner gets game_start right after the join ack.
+  useEffect(() => {
+    function onGameStart(data) {
+      setGameState(data);
+      setPage("game");
+    }
+    socket.on("game_start", onGameStart);
+    return () => socket.off("game_start", onGameStart);
+  }, []);
+
   function goToLobby({ name, code }) {
     setPlayerName(name);
     setRoomCode(code);
     setPage("lobby");
-  }
-
-  function goToGame(data) {
-    setGameState(data);
-    setPage("game");
   }
 
   function goToGameOver(data) {
@@ -45,7 +52,6 @@ export default function App() {
         <Lobby
           playerName={playerName}
           roomCode={roomCode}
-          onGameStart={goToGame}
           onBack={goHome}
         />
       )}
@@ -62,7 +68,6 @@ export default function App() {
           playerName={playerName}
           roomCode={roomCode}
           result={result}
-          onRematch={goToGame}
           onHome={goHome}
         />
       )}

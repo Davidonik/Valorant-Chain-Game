@@ -1,15 +1,4 @@
-import { useEffect } from "react";
-import socket from "../socket";
-
-export default function Lobby({ playerName, roomCode, onGameStart, onBack }) {
-  useEffect(() => {
-    function onGameStartEvent(data) {
-      onGameStart(data);
-    }
-    socket.on("game_start", onGameStartEvent);
-    return () => socket.off("game_start", onGameStartEvent);
-  }, [onGameStart]);
-
+export default function Lobby({ playerName, roomCode, onBack }) {
   function copyCode() {
     navigator.clipboard.writeText(roomCode).catch(() => {});
   }

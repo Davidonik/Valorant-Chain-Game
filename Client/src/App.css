@@ -277,5 +277,17 @@ body {
 
 .rematch-row { display: flex; gap: 12px; align-items: center; }
 
+.missed-answers { width: 100%; }
+.missed-list { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.missed-item {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+.missed-name { font-weight: 600; }
+
 .chain-recap { width: 100%; }
+.missed-answers h3,
 .chain-recap h3 { text-align: center; color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }

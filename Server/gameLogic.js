@@ -1,4 +1,12 @@
 const { PLAYERS } = require("./players");
+const { STARTERS } = require("./starters");
+
+for (const [region, names] of Object.entries(STARTERS)) {
+  const missing = names.filter((p) => !PLAYERS[p]);
+  if (missing.length > 0) {
+    console.warn(`Starters for ${region} not found in players.js: ${missing.join(", ")}`);
+  }
+}
 
 function normalize(str) {
   return str.trim().toLowerCase().replace(/\s+/g, " ");
@@ -32,7 +40,13 @@ function getTeammates(playerName) {
   return Object.keys(PLAYERS[playerName]?.teammates ?? {});
 }
 
-function getRandomStarter() {
+function getRandomStarter(region) {
+  const regionPool = (STARTERS[region] ?? []).filter((p) => PLAYERS[p]);
+  if (regionPool.length > 0) {
+    return regionPool[Math.floor(Math.random() * regionPool.length)];
+  }
+
+  // No region chosen (or its pool is empty) — pick from everyone
   const wellConnected = Object.keys(PLAYERS).filter(
     (p) => getTeammates(p).length >= 4
   );

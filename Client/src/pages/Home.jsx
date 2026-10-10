@@ -1,10 +1,13 @@
 import { useState } from "react";
 import socket from "../socket";
 
+const REGIONS = ["Americas", "EMEA", "APAC", "China"];
+
 export default function Home({ onJoined }) {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [mode, setMode] = useState(null); // "create" | "join"
+  const [region, setRegion] = useState(""); // "" = any region
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -12,7 +15,7 @@ export default function Home({ onJoined }) {
     if (!name.trim()) return setError("Enter your name first.");
     setLoading(true);
     setError("");
-    socket.emit("create_room", { playerName: name.trim() }, (res) => {
+    socket.emit("create_room", { playerName: name.trim(), region: region || null }, (res) => {
       setLoading(false);
       if (res.success) {
         onJoined({ name: name.trim(), code: res.code });
@@ -65,6 +68,16 @@ export default function Home({ onJoined }) {
 
         {mode === "create" && (
           <>
+            <select
+              className="input"
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+            >
+              <option value="">Any region</option>
+              {REGIONS.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
             <button className="btn btn-primary" onClick={handleCreate} disabled={loading}>
               {loading ? "Creating…" : "Create Room"}
             </button>
@@ -77,9 +90,9 @@ export default function Home({ onJoined }) {
             <input
               className="input"
               type="text"
-              placeholder="Room code (e.g. AB3X)"
+              placeholder="Room code (e.g. AB3XK)"
               value={code}
-              maxLength={4}
+              maxLength={5}
               onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(""); }}
             />
             <button className="btn btn-primary" onClick={handleJoin} disabled={loading}>

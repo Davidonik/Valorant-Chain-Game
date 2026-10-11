@@ -3,6 +3,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const { handleSocketEvents } = require("./roomManager");
+const { handleFeedbackEvents } = require("./feedback");
 
 const app = express();
 app.use(cors());
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
   handleSocketEvents(io, socket);
+  handleFeedbackEvents(socket);
 
   socket.on("disconnect", () => {
     console.log(`Socket disconnected: ${socket.id}`);

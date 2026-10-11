@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Lobby from "./pages/Lobby";
 import Game from "./pages/Game";
 import GameOver from "./pages/GameOver";
+import MenuBar from "./components/MenuBar";
 import "./App.css";
 
 // pages: "home" | "lobby" | "game" | "gameover"
@@ -45,6 +46,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <MenuBar />
       {page === "home" && (
         <Home onJoined={goToLobby} />
       )}
@@ -71,6 +73,12 @@ export default function App() {
           onHome={goHome}
         />
       )}
+      <footer className="disclaimer">
+        ValoChain isn't endorsed by Riot Games and doesn't reflect the views or opinions
+        of Riot Games or anyone officially involved in producing or managing Riot Games
+        properties. Riot Games, and all associated properties are trademarks or registered
+        trademarks of Riot Games, Inc.
+      </footer>
     </div>
   );
 }

@@ -39,6 +39,7 @@ export default function App() {
   }
 
   function goHome() {
+    socket.emit("leave_room");
     setPage("home");
     setGameState(null);
     setResult(null);

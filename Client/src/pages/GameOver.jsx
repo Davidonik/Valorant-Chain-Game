@@ -5,17 +5,26 @@ import Chain from "../components/Chain";
 export default function GameOver({ playerName, roomCode, result, onHome }) {
   const [votes, setVotes] = useState(0);
   const [voted, setVoted] = useState(false);
+  const [opponentLeft, setOpponentLeft] = useState(false);
 
   const myId = socket.id;
   const iWon = result?.winnerId === myId;
   const isDisconnect = result?.reason === "disconnect";
+  const canRematch = !isDisconnect && !opponentLeft;
 
   useEffect(() => {
     function onRematchVote({ votes: v }) {
       setVotes(v);
     }
+    function onOpponentLeft() {
+      setOpponentLeft(true);
+    }
     socket.on("rematch_vote", onRematchVote);
-    return () => socket.off("rematch_vote", onRematchVote);
+    socket.on("opponent_left", onOpponentLeft);
+    return () => {
+      socket.off("rematch_vote", onRematchVote);
+      socket.off("opponent_left", onOpponentLeft);
+    };
   }, []);
 
   function handleRematch() {
@@ -38,7 +47,7 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
 
       <p className="reason-text">{reasonText}</p>
 
-      {!isDisconnect && (
+      {canRematch && (
         <div className="rematch-row">
           <button
             className={`btn btn-primary ${voted ? "voted" : ""}`}
@@ -51,8 +60,11 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
         </div>
       )}
 
-      {isDisconnect && (
-        <button className="btn btn-ghost" onClick={onHome}>Main Menu</button>
+      {!canRematch && (
+        <>
+          {opponentLeft && <p className="reason-text">Your opponent left — no rematch available.</p>}
+          <button className="btn btn-ghost" onClick={onHome}>Main Menu</button>
+        </>
       )}
 
       {/* Answers the loser could have given */}
@@ -71,12 +83,12 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
       )}
 
       {/* Chain recap */}
-      {result?.chain && result.chain.length > 0 && (
+      {result?.seedPlayer && (
         <div className="chain-recap">
           <h3>Chain recap</h3>
           <Chain
             chain={result.chain}
-            seedPlayer={result.chain[0]?.canonicalName}
+            seedPlayer={result.seedPlayer}
             myId={myId}
             players={[]}
             readonly

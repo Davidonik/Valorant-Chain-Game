@@ -40,6 +40,10 @@ function getTeammates(playerName) {
   return Object.keys(PLAYERS[playerName]?.teammates ?? {});
 }
 
+function getAllPlayerNames() {
+  return Object.keys(PLAYERS);
+}
+
 function getRandomStarter(region) {
   const regionPool = (STARTERS[region] ?? []).filter((p) => PLAYERS[p]);
   if (regionPool.length > 0) {
@@ -81,6 +85,7 @@ module.exports = {
   findPlayer,
   getSharedTeams,
   getTeammates,
+  getAllPlayerNames,
   getRandomStarter,
   validateSubmission,
 };

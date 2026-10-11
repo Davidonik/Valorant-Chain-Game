@@ -1,4 +1,10 @@
-const { validateSubmission, getRandomStarter, getTeammates, getSharedTeams } = require("./gameLogic");
+const {
+  validateSubmission,
+  getRandomStarter,
+  getTeammates,
+  getSharedTeams,
+  getAllPlayerNames,
+} = require("./gameLogic");
 
 // ---------------------------------------------------------------------------
 // In-memory room store
@@ -37,12 +43,58 @@ function getOpponent(room, socketId) {
 // ---------------------------------------------------------------------------
 
 const TURN_DURATION = 15; // seconds
+const ROOM_IDLE_MS = 10 * 60_000; // how long a finished room waits for a rematch
 
 function clearRoomTimer(room) {
   if (room.timer) {
     clearTimeout(room.timer);
     room.timer = null;
   }
+}
+
+function clearCleanupTimer(room) {
+  if (room.cleanupTimer) {
+    clearTimeout(room.cleanupTimer);
+    room.cleanupTimer = null;
+  }
+}
+
+function finishGame(io, code, room) {
+  room.status = "finished";
+  clearRoomTimer(room);
+
+  // Keep the room around for a rematch, then drop it
+  clearCleanupTimer(room);
+  room.cleanupTimer = setTimeout(() => {
+    io.to(code).emit("opponent_left");
+    io.socketsLeave(code);
+    rooms.delete(code);
+  }, ROOM_IDLE_MS);
+}
+
+// A player left or disconnected — tell the other one and remove the room
+function closeRoom(io, socket) {
+  const found = getRoomBySocket(socket.id);
+  if (!found) return;
+  const { code, room } = found;
+
+  clearRoomTimer(room);
+  clearCleanupTimer(room);
+
+  const opponent = getOpponent(room, socket.id);
+  const leaver = room.players.find((p) => p.id === socket.id);
+
+  if (opponent && room.status === "playing") {
+    socket.to(code).emit("opponent_disconnected", {
+      disconnectedName: leaver?.name ?? "Opponent",
+    });
+  } else if (opponent) {
+    socket.to(code).emit("opponent_left");
+  }
+
+  io.socketsLeave(code);
+  rooms.delete(code);
+  console.log(`Room ${code} deleted (${socket.id} left)`);
 }
 
 function startTurnTimer(io, code, room) {
@@ -75,13 +127,11 @@ function startTurnTimer(io, code, room) {
       loserName: loser.name,
       winnerId: winner.id,
       winnerName: winner.name,
+      seedPlayer: room.seedPlayer,
       chain: room.chain,
     });
 
-    room.status = "finished";
-    clearRoomTimer(room);
-
-    setTimeout(() => rooms.delete(code), 30_000);
+    finishGame(io, code, room);
   }, TURN_DURATION * 1000);
 }
 
@@ -106,6 +156,7 @@ function handleSocketEvents(io, socket) {
       seedPlayer: null,
       timer: null,
       timerStarted: null,
+      cleanupTimer: null,
       rematchVotes: new Set(),
     };
 
@@ -206,11 +257,11 @@ function handleSocketEvents(io, socket) {
         loserName: loser.name,
         winnerId: winner.id,
         winnerName: winner.name,
+        seedPlayer: room.seedPlayer,
         chain: room.chain,
       });
 
-      room.status = "finished";
-      setTimeout(() => rooms.delete(code), 30_000);
+      finishGame(io, code, room);
       return;
     }
 
@@ -220,7 +271,10 @@ function handleSocketEvents(io, socket) {
   // ── REMATCH ────────────────────────────────────────────────────────────────
   socket.on("rematch_request", () => {
     const found = getRoomBySocket(socket.id);
-    if (!found) return;
+    if (!found) {
+      socket.emit("opponent_left");
+      return;
+    }
     const { code, room } = found;
 
     if (room.status !== "finished") return;
@@ -235,24 +289,14 @@ function handleSocketEvents(io, socket) {
   });
 
   // ── DISCONNECT ─────────────────────────────────────────────────────────────
-  socket.on("disconnect", () => {
-    const found = getRoomBySocket(socket.id);
-    if (!found) return;
-    const { code, room } = found;
+  socket.on("disconnect", () => closeRoom(io, socket));
 
-    clearRoomTimer(room);
+  // ── LEAVE ROOM (back to main menu) ─────────────────────────────────────────
+  socket.on("leave_room", () => closeRoom(io, socket));
 
-    const opponent = getOpponent(room, socket.id);
-    const disconnected = room.players.find((p) => p.id === socket.id);
-
-    if (opponent && room.status === "playing") {
-      io.to(code).emit("opponent_disconnected", {
-        disconnectedName: disconnected?.name ?? "Opponent",
-      });
-    }
-
-    rooms.delete(code);
-    console.log(`Room ${code} deleted (${socket.id} disconnected)`);
+  // ── PLAYER NAMES (for the input suggestions) ───────────────────────────────
+  socket.on("get_player_names", (callback) => {
+    if (typeof callback === "function") callback(getAllPlayerNames());
   });
 }
 
@@ -263,6 +307,7 @@ function handleSocketEvents(io, socket) {
 function startGame(io, code, room) {
   const starter = getRandomStarter(room.region);
 
+  clearCleanupTimer(room);
   room.status = "playing";
   room.chain = [];
   room.usedPlayers = [starter];

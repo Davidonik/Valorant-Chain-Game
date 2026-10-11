@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import socket from "../socket";
 import Timer from "../components/Timer";
 import Chain from "../components/Chain";
+
+const MAX_SUGGESTIONS = 6;
 
 export default function Game({ playerName, roomCode, initialGameState, onGameOver }) {
   const [gameState, setGameState] = useState(initialGameState);
@@ -10,6 +12,8 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
   const [message, setMessage] = useState("");
   const [availableCount, setAvailableCount] = useState(null);
   const [timerKey, setTimerKey] = useState(0); // increment to reset timer
+  const [allPlayers, setAllPlayers] = useState([]); // every name in the database
+  const [highlight, setHighlight] = useState(-1);   // selected suggestion, -1 = none
   const inputRef = useRef(null);
 
   const myId = socket.id;
@@ -24,6 +28,23 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
   const players = gameState?.players ?? [];
   const opponent = players.find((p) => p.id !== myId);
   const me = players.find((p) => p.id === myId);
+
+  useEffect(() => {
+    socket.emit("get_player_names", (names) => setAllPlayers(names));
+  }, []);
+
+  // Players matching what's been typed so far — names starting with it first
+  const suggestions = useMemo(() => {
+    const typed = input.trim().toLowerCase();
+    if (!typed) return [];
+    const used = new Set([seedPlayer, ...chain.map((c) => c.canonicalName)]);
+    const matches = allPlayers.filter(
+      (p) => !used.has(p) && p.toLowerCase().includes(typed)
+    );
+    const startsWith = matches.filter((p) => p.toLowerCase().startsWith(typed));
+    const rest = matches.filter((p) => !p.toLowerCase().startsWith(typed));
+    return [...startsWith, ...rest].slice(0, MAX_SUGGESTIONS);
+  }, [input, allPlayers, chain, seedPlayer]);
 
   useEffect(() => {
     // Restore chain if re-entering game after rematch
@@ -94,14 +115,22 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
     }
   }, [isMyTurn]);
 
-  function submit() {
-    const trimmed = input.trim();
+  function submit(value = input) {
+    const trimmed = value.trim();
     if (!trimmed || !isMyTurn) return;
     socket.emit("submit_player", { input: trimmed });
   }
 
   function handleKey(e) {
-    if (e.key === "Enter") submit();
+    if (e.key === "ArrowDown" && suggestions.length > 0) {
+      e.preventDefault();
+      setHighlight((h) => (h + 1) % suggestions.length);
+    } else if (e.key === "ArrowUp" && suggestions.length > 0) {
+      e.preventDefault();
+      setHighlight((h) => (h <= 0 ? suggestions.length - 1 : h - 1));
+    } else if (e.key === "Enter") {
+      submit(suggestions[highlight] ?? input);
+    }
   }
 
   const turnLabel = isMyTurn
@@ -146,13 +175,30 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
             type="text"
             placeholder="Type a player name…"
             value={input}
-            onChange={(e) => { setInput(e.target.value); setMessage(""); }}
+            onChange={(e) => { setInput(e.target.value); setMessage(""); setHighlight(-1); }}
             onKeyDown={handleKey}
           />
-          <button className="btn btn-primary" onClick={submit}>
+          <button className="btn btn-primary" onClick={() => submit()}>
             Submit
           </button>
         </div>
+      )}
+
+      {/* Suggestions */}
+      {isMyTurn && suggestions.length > 0 && (
+        <ul className="suggestions">
+          {suggestions.map((name, i) => (
+            <li key={name}>
+              <button
+                className={`suggestion ${i === highlight ? "active" : ""}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => submit(name)}
+              >
+                {name}
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
 
       {message && <p className="game-message">{message}</p>}

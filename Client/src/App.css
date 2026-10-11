@@ -107,6 +107,7 @@ body {
   font-weight: 800;
   letter-spacing: -1px;
   color: var(--accent);
+  text-align: center;
 }
 
 .subtitle {
@@ -186,7 +187,20 @@ body {
 .room-code:hover { background: var(--border); }
 
 .hint { text-align: center; color: var(--muted); font-size: 0.82rem; }
+.hint.copied { color: var(--accent2); }
 .waiting-text { text-align: center; color: var(--muted); }
+
+.fun-fact {
+  width: 100%;
+  min-height: 5.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.fun-fact-text { color: var(--text); font-size: 0.92rem; line-height: 1.5; animation: fade-in 0.4s ease; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 .spinner {
   width: 36px; height: 36px;
@@ -276,6 +290,21 @@ body {
 .input-row { width: 100%; display: flex; gap: 8px; }
 .input-row .game-input { flex: 1; }
 
+.suggestions { width: 100%; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.suggestion {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.suggestion:hover,
+.suggestion.active { border-color: var(--accent); }
+
 .game-message {
   color: var(--accent);
   font-size: 0.9rem;
@@ -305,7 +334,7 @@ body {
   gap: 2px;
 }
 
-.chain-entry.seed { margin-bottom: 4px; }
+.chain-entry.seed { margin-top: 4px; }
 
 .chain-player {
   font-weight: 700;

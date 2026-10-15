@@ -86,7 +86,7 @@ export default function MenuBar() {
                     and the teams they shared.
                   </p>
                   <p className="modal-text">
-                    The pro player has to meet these requirements to appear in the game:
+                    The pro player has to meet these requirements to appear in the game (all the information is based on Liquipedia and VLR):
                   </p>
                   <ul className="modal-list">
                     <li>The player attended a Masters, Champions or an International League (EMEA, Americas, Pacific, China)</li>

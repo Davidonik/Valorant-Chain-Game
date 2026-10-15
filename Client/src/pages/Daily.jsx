@@ -182,7 +182,7 @@ export default function Daily({ onHome }) {
       await navigator.clipboard.writeText(shareText);
       setCopied("Copied to clipboard!");
     } catch {
-      setCopied("Couldn't copy — select the text above instead.");
+      setCopied("Couldn't copy, please try again or select the text above instead.");
     }
   }
 

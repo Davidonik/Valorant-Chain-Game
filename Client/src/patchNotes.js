@@ -8,7 +8,7 @@ export const PATCH_NOTES = [
     version: "1.0",
     date: "",
     changes: [
-      "First release: 1v1 rooms, 15-second turns and rematches.",
+      "First release of ValoChain",
     ],
   },
 ];

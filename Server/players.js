@@ -35,7 +35,7 @@ const PLAYERS = sortObjectKeys({
       mazin:  ["MIBR"],
       Artzin: ["MIBR"],
       Palla:  ["MIBR"],
-      rich:   ["MIBR"],
+      // rich:   ["MIBR"],
       liazzi: ["MIBR"],
       Pa1nt:  ["MIBR"],
     }
@@ -135,8 +135,8 @@ const PLAYERS = sortObjectKeys({
       v1c:      ["Cloud9"],
       Xeppaa:   ["Cloud9"],
       Demon1:   ["Cloud9"],
-      Jackk:    ["Cloud9"],
-      Notexxd:  ["Cloud9"],
+      // Jackk:    ["Cloud9"],
+      // Notexxd:  ["Cloud9"],
     }
   },
 
@@ -5936,7 +5936,7 @@ const PLAYERS = sortObjectKeys({
       Artzin:  ["MIBR"],
       Palla:   ["MIBR"],
       liazzi:  ["MIBR"],
-      ShahZaM: ["MIBR"],
+      // ShahZaM: ["MIBR"],
       Pa1nt:   ["MIBR"],
     }
   },
@@ -8285,7 +8285,7 @@ const PLAYERS = sortObjectKeys({
       Xeppaa:      ["Cloud9"],
       Zellsis:     ["Cloud9"],
       Notexxd:     ["Cloud9"],
-      penny:       ["Cloud9"],
+      // penny:       ["Cloud9"],
       v1c:         ["Cloud9"],
       FireBallOps: ["Cloud9"],
     }
@@ -8297,7 +8297,7 @@ const PLAYERS = sortObjectKeys({
       Xeppaa:  ["Cloud9"],
       Zellsis: ["Cloud9"],
       Jackk:   ["Cloud9"],
-      penny:   ["Cloud9"],
+      // penny:   ["Cloud9"],
       v1c:     ["Cloud9"],
     }
   },

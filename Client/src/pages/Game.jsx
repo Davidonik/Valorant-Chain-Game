@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import socket from "../socket";
 import Timer from "../components/Timer";
 import Chain from "../components/Chain";
+import Hearts from "../components/Hearts";
 
 const MAX_SUGGESTIONS = 6;
+const WRONG_GUESS_COOLDOWN_MS = 1000; // matches the server
 
 export default function Game({ playerName, roomCode, initialGameState, onGameOver }) {
   const [gameState, setGameState] = useState(initialGameState);
@@ -14,12 +16,15 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
   const [timerKey, setTimerKey] = useState(0); // increment to reset timer
   const [allPlayers, setAllPlayers] = useState([]); // every name in the database
   const [highlight, setHighlight] = useState(-1);   // selected suggestion, -1 = none
+  const [coolingDown, setCoolingDown] = useState(false); // briefly locked after a wrong guess
   const inputRef = useRef(null);
 
   const myId = socket.id;
   const isMyTurn = gameState?.activePlayerId === myId;
   const seedPlayer = gameState?.seedPlayer;
   const turnDuration = gameState?.turnDuration ?? 15;
+  const maxLives = gameState?.maxLives ?? 3;
+  const livesOf = (id) => gameState?.lives?.[id] ?? maxLives;
 
   // Current player in chain (last submitted, or seed)
   const currentPlayer =
@@ -78,6 +83,17 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
         NOT_TEAMMATES: `"${bad}" was not a teammate of ${currentPlayer}.`,
       };
       setMessage(msgs[reason] || `Invalid: ${reason}`);
+      setInput("");
+      setCoolingDown(true);
+      setTimeout(() => setCoolingDown(false), WRONG_GUESS_COOLDOWN_MS);
+    }
+
+    function onLivesUpdate({ lives }) {
+      setGameState((prev) => ({ ...prev, lives }));
+    }
+
+    function onTooFast() {
+      setMessage("Slow down — wait a moment before guessing again.");
     }
 
     function onNotYourTurn() {
@@ -96,6 +112,8 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
     socket.on("valid_move", onValidMove);
     socket.on("invalid_move", onInvalidMove);
     socket.on("not_your_turn", onNotYourTurn);
+    socket.on("lives_update", onLivesUpdate);
+    socket.on("too_fast", onTooFast);
     socket.on("game_over", onGameOverEvent);
     socket.on("opponent_disconnected", onOpponentDisconnected);
 
@@ -103,6 +121,8 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
       socket.off("valid_move", onValidMove);
       socket.off("invalid_move", onInvalidMove);
       socket.off("not_your_turn", onNotYourTurn);
+      socket.off("lives_update", onLivesUpdate);
+      socket.off("too_fast", onTooFast);
       socket.off("game_over", onGameOverEvent);
       socket.off("opponent_disconnected", onOpponentDisconnected);
     };
@@ -117,7 +137,7 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
 
   function submit(value = input) {
     const trimmed = value.trim();
-    if (!trimmed || !isMyTurn) return;
+    if (!trimmed || !isMyTurn || coolingDown) return;
     socket.emit("submit_player", { input: trimmed });
   }
 
@@ -141,9 +161,15 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
     <div className="page game-page">
       {/* Header row */}
       <div className="game-header">
-        <div className="player-badge me">{me?.name ?? playerName}</div>
+        <div className="player-side">
+          <div className="player-badge me">{me?.name ?? playerName}</div>
+          <Hearts lives={livesOf(myId)} maxLives={maxLives} />
+        </div>
         <div className="vs-badge">VS</div>
-        <div className="player-badge opp">{opponent?.name ?? "Opponent"}</div>
+        <div className="player-side">
+          <div className="player-badge opp">{opponent?.name ?? "Opponent"}</div>
+          <Hearts lives={livesOf(opponent?.id)} maxLives={maxLives} />
+        </div>
       </div>
 
       {/* Timer */}
@@ -178,7 +204,7 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
             onChange={(e) => { setInput(e.target.value); setMessage(""); setHighlight(-1); }}
             onKeyDown={handleKey}
           />
-          <button className="btn btn-primary" onClick={() => submit()}>
+          <button className="btn btn-primary" onClick={() => submit()} disabled={coolingDown}>
             Submit
           </button>
         </div>

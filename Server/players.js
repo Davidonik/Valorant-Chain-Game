@@ -279,6 +279,10 @@ const PLAYERS = sortObjectKeys({
 
   Doma: {
     teammates: {
+      Pa1ze: ["Joblife"],
+      UNFAKE: ["Joblife"],
+      kamyk: ["Joblife"],
+      runneR: ["Joblife"],
       Boaster:   ["Fnatic"],
       Mistic:    ["Fnatic"],
       Derke:     ["Fnatic"],
@@ -333,6 +337,10 @@ const PLAYERS = sortObjectKeys({
 
   Magnum: {
     teammates: {
+      paTiTek: ["Enterprise Esports"],
+      Lime: ["Enterprise Esports"],
+      kozzy: ["Enterprise Esports"],
+      iluri: ["Enterprise Esports"],
       H1ber:     ["Fnatic"],
       Fearoth:   ["Fnatic"],
       Boaster:   ["Fnatic"],
@@ -419,6 +427,10 @@ const PLAYERS = sortObjectKeys({
 
   frz: {
     teammates: {
+      xenom: ["2GAME"],
+      gobera: ["2GAME"],
+      Brinks: ["2GAME"],
+      ambitioN: ["2GAME"],
       gtnziN:  ["Team Vikings"],
       Saadhak: ["Team Vikings"],
       Sacy:    ["Team Vikings"],
@@ -1990,17 +2002,19 @@ const PLAYERS = sortObjectKeys({
 
   mazin: {
     teammates: {
+      Zanatsu: ["Fluxo W7M"],
+      tuyz: ["Fluxo W7M"],
       dgzin:   ["FURIA Esports"],
       xand:    ["FURIA Esports"],
       qck:     ["FURIA Esports"],
       Khalil:  ["FURIA Esports"],
       Nozwerr: ["FURIA Esports"],
       mwzera:  ["FURIA Esports"],
-      jzz:     ["MIBR"],
+      jzz:     ["MIBR", "Fluxo W7M"],
       frz:     ["MIBR"],
       RgLM:    ["MIBR"],
       Artzin:  ["MIBR"],
-      Palla:   ["MIBR"],
+      Palla:   ["MIBR", "Fluxo W7M"],
       rich:    ["MIBR"],
       liazzi:  ["MIBR"],
       ShahZaM: ["MIBR"],
@@ -2037,6 +2051,10 @@ const PLAYERS = sortObjectKeys({
 
   PTC: {
     teammates: {
+      Apinya: ["Sharper Esports"],
+      Kadoom: ["Sharper Esports"],
+      "Laz (TH)": ["Sharper Esports"],
+      NIZ: ["Sharper Esports"],
       ChAlalala: ["FULL SENSE"],
       JohnOlsen: ["FULL SENSE"],
       LAMMYSNAX: ["FULL SENSE"],
@@ -2276,6 +2294,10 @@ const PLAYERS = sortObjectKeys({
 
   Surf: {
     teammates: {
+      aLerT: ["Xipto Esports"],
+      Canady: ["Xipto Esports"],
+      doffy: ["Xipto Esports"],
+      endoistzin: ["Xipto Esports"],
       foxz:      ["XERXIA"],
       sushiboys: ["XERXIA"],
       sScary:    ["XERXIA"],
@@ -2484,7 +2506,10 @@ const PLAYERS = sortObjectKeys({
 
   Tacolilla: {
     teammates: {
-      Melser:  ["Leviatán"],
+      Loss: ["BESTIA"],
+      chubi: ["BESTIA"],
+      david: ["BESTIA"],
+      Melser:  ["Leviatán", "BESTIA"],
       adverso: ["Leviatán"],
       kiNgg:   ["Leviatán"],
       Shyy:    ["Leviatán"],
@@ -2495,7 +2520,10 @@ const PLAYERS = sortObjectKeys({
 
   Melser: {
     teammates: {
-      Tacolilla: ["Leviatán"],
+      Loss: ["BESTIA"],
+      chubi: ["BESTIA"],
+      david: ["BESTIA"],
+      Tacolilla: ["Leviatán", "BESTIA"],
       adverso:   ["Leviatán", "KRÜ Esports"],
       kiNgg:     ["Leviatán"],
       Shyy:      ["Leviatán", "KRÜ Esports"],
@@ -3377,6 +3405,9 @@ const PLAYERS = sortObjectKeys({
 
   tuyz: {
     teammates: {
+      Zanatsu: ["Fluxo W7M"],
+      jzz: ["Fluxo W7M"],
+      mazin: ["Fluxo W7M"],
       aspas:    ["LOUD"],
       Less:     ["LOUD"],
       Saadhak:  ["LOUD"],
@@ -3386,7 +3417,7 @@ const PLAYERS = sortObjectKeys({
       dgzin:    ["LOUD"],
       v1nNy:    ["LOUD"],
       heat:     ["FURIA Esports"],
-      Palla:    ["FURIA Esports"],
+      Palla:    ["FURIA Esports", "Fluxo W7M"],
       Urango:   ["FURIA Esports"],
       adverso:  ["FURIA Esports"],
     }
@@ -3394,12 +3425,15 @@ const PLAYERS = sortObjectKeys({
 
   jzz: {
     teammates: {
+      Zanatsu: ["Fluxo W7M"],
+      tuyz: ["Fluxo W7M"],
+      Palla: ["Fluxo W7M"],
       frz:     ["MIBR"],
       heat:    ["MIBR"],
       murizzz: ["MIBR"],
       RgLM:    ["MIBR"],
       TxoziN:  ["MIBR"],
-      mazin:   ["MIBR"],
+      mazin:   ["MIBR", "Fluxo W7M"],
       Artzin:  ["MIBR"],
     }
   },
@@ -3948,6 +3982,10 @@ const PLAYERS = sortObjectKeys({
 
   kamyk: {
     teammates: {
+      Pa1ze: ["Joblife"],
+      UNFAKE: ["Joblife"],
+      Doma: ["Joblife"],
+      runneR: ["Joblife"],
       Boaster:   ["Fnatic"],
       Derke:     ["Fnatic"],
       Alfajer:   ["Fnatic"],
@@ -4079,6 +4117,10 @@ const PLAYERS = sortObjectKeys({
 
   monk: {
     teammates: {
+      Layla: ["A Team"],
+      Dingwei: ["A Team"],
+      Folykiki: ["A Team"],
+      Eren: ["A Team"],
       zjc:       ["Attacking Soul"],
       YHchen:    ["Attacking Soul"],
       Bunt:      ["Attacking Soul", "All Gamers"],
@@ -4444,6 +4486,10 @@ const PLAYERS = sortObjectKeys({
 
   Yuran: {
     teammates: {
+      Kippei: ["QT DIG∞"],
+      margaret: ["QT DIG∞"],
+      misaya: ["QT DIG∞"],
+      Pkm: ["QT DIG∞"],
       Laz:       ["ZETA DIVISION"],
       Dep:       ["ZETA DIVISION"],
       SugarZ3ro: ["ZETA DIVISION"],
@@ -4515,6 +4561,10 @@ const PLAYERS = sortObjectKeys({
 
   reazy: {
     teammates: {
+      DeadInk: ["Fire Flux Esports"],
+      batujnax: ["Fire Flux Esports"],
+      hezacoil: ["Fire Flux Esports"],
+      Kachoww: ["Fire Flux Esports"],
       QutionerX: ["BBL Esports"],
       Brave:     ["BBL Esports"],
       Elite:     ["BBL Esports"],
@@ -4676,6 +4726,10 @@ const PLAYERS = sortObjectKeys({
 
   paTiTek: {
     teammates: {
+      Magnum: ["Enterprise Esports"],
+      Lime: ["Enterprise Esports"],
+      kozzy: ["Enterprise Esports"],
+      iluri: ["Enterprise Esports"],
       Boo:        ["Team Heretics"],
       benjyfishy: ["Team Heretics"],
       MiniBoo:    ["Team Heretics"],
@@ -4712,6 +4766,10 @@ const PLAYERS = sortObjectKeys({
 
   runneR: {
     teammates: {
+      Pa1ze: ["Joblife"],
+      UNFAKE: ["Joblife"],
+      kamyk: ["Joblife"],
+      Doma: ["Joblife"],
       ceNder:    ["Team Vitality"],
       Kicks:     ["Team Vitality"],
       Sayf:      ["Team Vitality"],
@@ -5348,6 +5406,10 @@ const PLAYERS = sortObjectKeys({
 
   Dingwei: {
     teammates: {
+      Layla: ["A Team"],
+      Folykiki: ["A Team"],
+      Eren: ["A Team"],
+      monk: ["A Team"],
       TvirusLuke: ["Dragon Ranger Gaming"],
       Nicc:       ["Dragon Ranger Gaming"],
       vo0kashu:   ["Dragon Ranger Gaming"],
@@ -5600,6 +5662,10 @@ const PLAYERS = sortObjectKeys({
 
   Eren: {
     teammates: {
+      Layla: ["A Team"],
+      Dingwei: ["A Team"],
+      Folykiki: ["A Team"],
+      monk: ["A Team"],
       AAK:      ["TYLOO"],
       ICEKING:  ["TYLOO"],
       zjc:      ["TYLOO"],
@@ -5849,14 +5915,16 @@ const PLAYERS = sortObjectKeys({
 
   Palla: {
     teammates: {
-      mazin:   ["MIBR"],
+      Zanatsu: ["Fluxo W7M"],
+      jzz: ["Fluxo W7M"],
+      mazin:   ["MIBR", "Fluxo W7M"],
       Artzin:  ["MIBR"],
       rich:    ["MIBR"],
       liazzi:  ["MIBR"],
       ShahZaM: ["MIBR"],
       Pa1nt:   ["MIBR"],
       heat:    ["FURIA Esports"],
-      tuyz:    ["FURIA Esports"],
+      tuyz:    ["FURIA Esports", "Fluxo W7M"],
       Urango:  ["FURIA Esports"],
       adverso: ["FURIA Esports"],
     }
@@ -6124,6 +6192,10 @@ const PLAYERS = sortObjectKeys({
 
   xenom: {
     teammates: {
+      gobera: ["2GAME"],
+      Brinks: ["2GAME"],
+      frz: ["2GAME"],
+      ambitioN: ["2GAME"],
       Artzin:   ["MIBR"],
       cortezia: ["MIBR"],
       Nozwerr:  ["MIBR"],
@@ -6233,6 +6305,10 @@ const PLAYERS = sortObjectKeys({
 
   gobera: {
     teammates: {
+      xenom: ["2GAME"],
+      Brinks: ["2GAME"],
+      frz: ["2GAME"],
+      ambitioN: ["2GAME"],
       lz:       ["2GAME"],
       pryze:    ["2GAME"],
       silentzz: ["2GAME"],
@@ -6480,6 +6556,10 @@ const PLAYERS = sortObjectKeys({
 
   batujnax: {
     teammates: {
+      DeadInk: ["Fire Flux Esports"],
+      hezacoil: ["Fire Flux Esports"],
+      Kachoww: ["Fire Flux Esports"],
+      reazy: ["Fire Flux Esports"],
       AvovA:      ["Apeks"],
       hype:       ["Apeks"],
       MOLSI:      ["Apeks"],
@@ -6714,6 +6794,10 @@ const PLAYERS = sortObjectKeys({
 
   margaret: {
     teammates: {
+      Kippei: ["QT DIG∞"],
+      misaya: ["QT DIG∞"],
+      Pkm: ["QT DIG∞"],
+      Yuran: ["QT DIG∞"],
       Dambi:   ["NS RedForce"],
       Francis: ["NS RedForce"],
       Ivy:     ["NS RedForce"],
@@ -7069,6 +7153,10 @@ const PLAYERS = sortObjectKeys({
 
   Akeman: {
     teammates: {
+      Krst1Ng: ["KeepBest Gaming"],
+      Sibeastw0w: ["KeepBest Gaming"],
+      Ying: ["KeepBest Gaming"],
+      Tonk: ["KeepBest Gaming"],
       Nicc:     ["Dragon Ranger Gaming"],
       vo0kashu: ["Dragon Ranger Gaming"],
       SpiritZ1: ["Dragon Ranger Gaming"],
@@ -7170,6 +7258,10 @@ const PLAYERS = sortObjectKeys({
 
   UNFAKE: {
     teammates: {
+      Pa1ze: ["Joblife"],
+      kamyk: ["Joblife"],
+      Doma: ["Joblife"],
+      runneR: ["Joblife"],
       Kicks:     ["Team Vitality"],
       Less:      ["Team Vitality"],
       Derke:     ["Team Vitality"],
@@ -7208,6 +7300,10 @@ const PLAYERS = sortObjectKeys({
 
   MONSTEERR: {
     teammates: {
+      Fizzy: ["Eintracht Frankfurt"],
+      Jamelinho213: ["Eintracht Frankfurt"],
+      musashi: ["Eintracht Frankfurt"],
+      azury: ["Eintracht Frankfurt"],
       Filu:   ["KOI"],
       flyuh:  ["KOI"],
       baddyG: ["KOI"],
@@ -7628,6 +7724,10 @@ const PLAYERS = sortObjectKeys({
 
   Kyu: {
     teammates: {
+      alvinboy: ["M80"],
+      Boni: ["M80"],
+      Spaz: ["M80"],
+      NiSMO: ["M80"],
       cortezia: ["Sentinels"],
       N4RRATE:  ["Sentinels"],
       johnqt:   ["Sentinels"],
@@ -7891,6 +7991,10 @@ const PLAYERS = sortObjectKeys({
 
   Hermes: {
     teammates: {
+      Xiesta: ["ONSIDE GAMING"],
+      Cloudy: ["ONSIDE GAMING"],
+      Ray: ["ONSIDE GAMING"],
+      Wolverine: ["ONSIDE GAMING"],
       MaKo:    ["DRX"],
       HYUNMIN: ["DRX"],
       free1ng: ["DRX"],
@@ -8448,6 +8552,384 @@ const PLAYERS = sortObjectKeys({
       kamo:  ["Team Liquid"],
       Kicks: ["Team Liquid"],
       trexx: ["Team Liquid"],
+    }
+  },
+
+  iluri: {
+    teammates: {
+      kozzy:   ["Enterprise Esports"],
+      Lime:    ["Enterprise Esports"],
+      Magnum:  ["Enterprise Esports"],
+      paTiTek: ["Enterprise Esports"],
+    }
+  },
+
+  kozzy: {
+    teammates: {
+      iluri:   ["Enterprise Esports"],
+      Lime:    ["Enterprise Esports"],
+      Magnum:  ["Enterprise Esports"],
+      paTiTek: ["Enterprise Esports"],
+    }
+  },
+
+  Lime: {
+    teammates: {
+      iluri:   ["Enterprise Esports"],
+      kozzy:   ["Enterprise Esports"],
+      Magnum:  ["Enterprise Esports"],
+      paTiTek: ["Enterprise Esports"],
+    }
+  },
+
+  Kachoww: {
+    teammates: {
+      reazy:    ["Fire Flux Esports"],
+      hezacoil: ["Fire Flux Esports"],
+      batujnax: ["Fire Flux Esports"],
+      DeadInk:  ["Fire Flux Esports"],
+    }
+  },
+
+  hezacoil: {
+    teammates: {
+      reazy:    ["Fire Flux Esports"],
+      Kachoww:  ["Fire Flux Esports"],
+      batujnax: ["Fire Flux Esports"],
+      DeadInk:  ["Fire Flux Esports"],
+    }
+  },
+
+  DeadInk: {
+    teammates: {
+      reazy:    ["Fire Flux Esports"],
+      Kachoww:  ["Fire Flux Esports"],
+      hezacoil: ["Fire Flux Esports"],
+      batujnax: ["Fire Flux Esports"],
+    }
+  },
+
+  Pa1ze: {
+    teammates: {
+      runneR: ["Joblife"],
+      Doma:   ["Joblife"],
+      kamyk:  ["Joblife"],
+      UNFAKE: ["Joblife"],
+    }
+  },
+
+  azury: {
+    teammates: {
+      musashi:      ["Eintracht Frankfurt"],
+      MONSTEERR:    ["Eintracht Frankfurt"],
+      Jamelinho213: ["Eintracht Frankfurt"],
+      Fizzy:        ["Eintracht Frankfurt"],
+    }
+  },
+
+  musashi: {
+    teammates: {
+      azury:        ["Eintracht Frankfurt"],
+      MONSTEERR:    ["Eintracht Frankfurt"],
+      Jamelinho213: ["Eintracht Frankfurt"],
+      Fizzy:        ["Eintracht Frankfurt"],
+    }
+  },
+
+  Jamelinho213: {
+    teammates: {
+      azury:     ["Eintracht Frankfurt"],
+      musashi:   ["Eintracht Frankfurt"],
+      MONSTEERR: ["Eintracht Frankfurt"],
+      Fizzy:     ["Eintracht Frankfurt"],
+    }
+  },
+
+  Fizzy: {
+    teammates: {
+      azury:        ["Eintracht Frankfurt"],
+      musashi:      ["Eintracht Frankfurt"],
+      MONSTEERR:    ["Eintracht Frankfurt"],
+      Jamelinho213: ["Eintracht Frankfurt"],
+    }
+  },
+
+  Tonk: {
+    teammates: {
+      Ying:       ["KeepBest Gaming"],
+      Sibeastw0w: ["KeepBest Gaming"],
+      Akeman:     ["KeepBest Gaming"],
+      Krst1Ng:    ["KeepBest Gaming"],
+    }
+  },
+
+  Ying: {
+    teammates: {
+      Tonk:       ["KeepBest Gaming"],
+      Sibeastw0w: ["KeepBest Gaming"],
+      Akeman:     ["KeepBest Gaming"],
+      Krst1Ng:    ["KeepBest Gaming"],
+    }
+  },
+
+  Sibeastw0w: {
+    teammates: {
+      Tonk:    ["KeepBest Gaming"],
+      Ying:    ["KeepBest Gaming"],
+      Akeman:  ["KeepBest Gaming"],
+      Krst1Ng: ["KeepBest Gaming"],
+    }
+  },
+
+  Krst1Ng: {
+    teammates: {
+      Tonk:       ["KeepBest Gaming"],
+      Ying:       ["KeepBest Gaming"],
+      Sibeastw0w: ["KeepBest Gaming"],
+      Akeman:     ["KeepBest Gaming"],
+    }
+  },
+
+  Folykiki: {
+    teammates: {
+      monk:    ["A Team"],
+      Eren:    ["A Team"],
+      Dingwei: ["A Team"],
+      Layla:   ["A Team"],
+    }
+  },
+
+  Layla: {
+    teammates: {
+      monk:     ["A Team"],
+      Eren:     ["A Team"],
+      Folykiki: ["A Team"],
+      Dingwei:  ["A Team"],
+    }
+  },
+
+  NiSMO: {
+    teammates: {
+      Kyu:      ["M80"],
+      Spaz:     ["M80"],
+      Boni:     ["M80"],
+      alvinboy: ["M80"],
+    }
+  },
+
+  Spaz: {
+    teammates: {
+      Kyu:      ["M80"],
+      NiSMO:    ["M80"],
+      Boni:     ["M80"],
+      alvinboy: ["M80"],
+    }
+  },
+
+  Boni: {
+    teammates: {
+      Kyu:      ["M80"],
+      NiSMO:    ["M80"],
+      Spaz:     ["M80"],
+      alvinboy: ["M80"],
+    }
+  },
+
+  alvinboy: {
+    teammates: {
+      Kyu:   ["M80"],
+      NiSMO: ["M80"],
+      Spaz:  ["M80"],
+      Boni:  ["M80"],
+    }
+  },
+
+  david: {
+    teammates: {
+      Tacolilla: ["BESTIA"],
+      chubi:     ["BESTIA"],
+      Melser:    ["BESTIA"],
+      Loss:      ["BESTIA"],
+    }
+  },
+
+  chubi: {
+    teammates: {
+      Tacolilla: ["BESTIA"],
+      david:     ["BESTIA"],
+      Melser:    ["BESTIA"],
+      Loss:      ["BESTIA"],
+    }
+  },
+
+  Loss: {
+    teammates: {
+      Tacolilla: ["BESTIA"],
+      david:     ["BESTIA"],
+      chubi:     ["BESTIA"],
+      Melser:    ["BESTIA"],
+    }
+  },
+
+  Zanatsu: {
+    teammates: {
+      mazin: ["Fluxo W7M"],
+      jzz:   ["Fluxo W7M"],
+      Palla: ["Fluxo W7M"],
+      tuyz:  ["Fluxo W7M"],
+    }
+  },
+
+  ambitioN: {
+    teammates: {
+      frz:    ["2GAME"],
+      Brinks: ["2GAME"],
+      gobera: ["2GAME"],
+      xenom:  ["2GAME"],
+    }
+  },
+
+  Brinks: {
+    teammates: {
+      ambitioN: ["2GAME"],
+      frz:      ["2GAME"],
+      gobera:   ["2GAME"],
+      xenom:    ["2GAME"],
+    }
+  },
+
+  NIZ: {
+    teammates: {
+      PTC:        ["Sharper Esports"],
+      "Laz (TH)": ["Sharper Esports"],
+      Kadoom:     ["Sharper Esports"],
+      Apinya:     ["Sharper Esports"],
+    }
+  },
+
+  "Laz (TH)": {
+    teammates: {
+      PTC:    ["Sharper Esports"],
+      NIZ:    ["Sharper Esports"],
+      Kadoom: ["Sharper Esports"],
+      Apinya: ["Sharper Esports"],
+    }
+  },
+
+  Kadoom: {
+    teammates: {
+      PTC:        ["Sharper Esports"],
+      NIZ:        ["Sharper Esports"],
+      "Laz (TH)": ["Sharper Esports"],
+      Apinya:     ["Sharper Esports"],
+    }
+  },
+
+  Apinya: {
+    teammates: {
+      PTC:        ["Sharper Esports"],
+      NIZ:        ["Sharper Esports"],
+      "Laz (TH)": ["Sharper Esports"],
+      Kadoom:     ["Sharper Esports"],
+    }
+  },
+
+  Pkm: {
+    teammates: {
+      Yuran:    ["QT DIG∞"],
+      misaya:   ["QT DIG∞"],
+      margaret: ["QT DIG∞"],
+      Kippei:   ["QT DIG∞"],
+    }
+  },
+
+  misaya: {
+    teammates: {
+      Yuran:    ["QT DIG∞"],
+      Pkm:      ["QT DIG∞"],
+      margaret: ["QT DIG∞"],
+      Kippei:   ["QT DIG∞"],
+    }
+  },
+
+  Kippei: {
+    teammates: {
+      Yuran:    ["QT DIG∞"],
+      Pkm:      ["QT DIG∞"],
+      misaya:   ["QT DIG∞"],
+      margaret: ["QT DIG∞"],
+    }
+  },
+
+  Wolverine: {
+    teammates: {
+      Ray:    ["ONSIDE GAMING"],
+      Cloudy: ["ONSIDE GAMING"],
+      Hermes: ["ONSIDE GAMING"],
+      Xiesta: ["ONSIDE GAMING"],
+    }
+  },
+
+  Ray: {
+    teammates: {
+      Wolverine: ["ONSIDE GAMING"],
+      Cloudy:    ["ONSIDE GAMING"],
+      Hermes:    ["ONSIDE GAMING"],
+      Xiesta:    ["ONSIDE GAMING"],
+    }
+  },
+
+  Cloudy: {
+    teammates: {
+      Wolverine: ["ONSIDE GAMING"],
+      Ray:       ["ONSIDE GAMING"],
+      Hermes:    ["ONSIDE GAMING"],
+      Xiesta:    ["ONSIDE GAMING"],
+    }
+  },
+
+  Xiesta: {
+    teammates: {
+      Wolverine: ["ONSIDE GAMING"],
+      Ray:       ["ONSIDE GAMING"],
+      Cloudy:    ["ONSIDE GAMING"],
+      Hermes:    ["ONSIDE GAMING"],
+    }
+  },
+
+  endoistzin: {
+    teammates: {
+      Surf:   ["Xipto Esports"],
+      doffy:  ["Xipto Esports"],
+      Canady: ["Xipto Esports"],
+      aLerT:  ["Xipto Esports"],
+    }
+  },
+
+  doffy: {
+    teammates: {
+      Surf:       ["Xipto Esports"],
+      endoistzin: ["Xipto Esports"],
+      Canady:     ["Xipto Esports"],
+      aLerT:      ["Xipto Esports"],
+    }
+  },
+
+  Canady: {
+    teammates: {
+      Surf:       ["Xipto Esports"],
+      endoistzin: ["Xipto Esports"],
+      doffy:      ["Xipto Esports"],
+      aLerT:      ["Xipto Esports"],
+    }
+  },
+
+  aLerT: {
+    teammates: {
+      Surf:       ["Xipto Esports"],
+      endoistzin: ["Xipto Esports"],
+      doffy:      ["Xipto Esports"],
+      Canady:     ["Xipto Esports"],
     }
   },
 

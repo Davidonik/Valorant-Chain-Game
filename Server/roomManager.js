@@ -44,6 +44,8 @@ function getOpponent(room, socketId) {
 
 const TURN_DURATION = 15; // seconds
 const ROOM_IDLE_MS = 10 * 60_000; // how long a finished room waits for a rematch
+const MAX_LIVES = 3;
+const WRONG_GUESS_COOLDOWN_MS = 1000; // blocks rapid-fire guessing
 
 function clearRoomTimer(room) {
   if (room.timer) {
@@ -97,42 +99,48 @@ function closeRoom(io, socket) {
   console.log(`Room ${code} deleted (${socket.id} left)`);
 }
 
+// The active player loses (ran out of time or out of lives)
+function activePlayerLoses(io, code, room, reason) {
+  const loser = room.players.find((p) => p.id === room.activePlayerId);
+  const winner = room.players.find((p) => p.id !== room.activePlayerId);
+
+  if (!loser || !winner) return;
+
+  // What the loser could have answered
+  const currentPlayer =
+    room.chain.length > 0
+      ? room.chain[room.chain.length - 1].canonicalName
+      : room.seedPlayer;
+  const missedAnswers = getTeammates(currentPlayer)
+    .filter((t) => !room.usedPlayers.includes(t))
+    .map((t) => ({
+      name: t,
+      teams: getSharedTeams(currentPlayer, t).join(", "),
+    }));
+
+  io.to(code).emit("game_over", {
+    reason,
+    currentPlayer,
+    missedAnswers,
+    loserId: loser.id,
+    loserName: loser.name,
+    winnerId: winner.id,
+    winnerName: winner.name,
+    seedPlayer: room.seedPlayer,
+    chain: room.chain,
+  });
+
+  finishGame(io, code, room);
+}
+
 function startTurnTimer(io, code, room) {
   clearRoomTimer(room);
   room.timerStarted = Date.now();
 
-  room.timer = setTimeout(() => {
-    const loser = room.players.find((p) => p.id === room.activePlayerId);
-    const winner = room.players.find((p) => p.id !== room.activePlayerId);
-
-    if (!loser || !winner) return;
-
-    // What the loser could have answered
-    const currentPlayer =
-      room.chain.length > 0
-        ? room.chain[room.chain.length - 1].canonicalName
-        : room.seedPlayer;
-    const missedAnswers = getTeammates(currentPlayer)
-      .filter((t) => !room.usedPlayers.includes(t))
-      .map((t) => ({
-        name: t,
-        teams: getSharedTeams(currentPlayer, t).join(", "),
-      }));
-
-    io.to(code).emit("game_over", {
-      reason: "timeout",
-      currentPlayer,
-      missedAnswers,
-      loserId: loser.id,
-      loserName: loser.name,
-      winnerId: winner.id,
-      winnerName: winner.name,
-      seedPlayer: room.seedPlayer,
-      chain: room.chain,
-    });
-
-    finishGame(io, code, room);
-  }, TURN_DURATION * 1000);
+  room.timer = setTimeout(
+    () => activePlayerLoses(io, code, room, "timeout"),
+    TURN_DURATION * 1000
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -157,6 +165,8 @@ function handleSocketEvents(io, socket) {
       timer: null,
       timerStarted: null,
       cleanupTimer: null,
+      lives: {},               // { socketId: livesLeft }
+      lastWrongGuess: {},      // { socketId: timestamp }
       rematchVotes: new Set(),
     };
 
@@ -212,10 +222,24 @@ function handleSocketEvents(io, socket) {
         ? room.chain[room.chain.length - 1].canonicalName
         : room.seedPlayer;
 
+    if (Date.now() - (room.lastWrongGuess[socket.id] ?? 0) < WRONG_GUESS_COOLDOWN_MS) {
+      socket.emit("too_fast");
+      return;
+    }
+
     const result = validateSubmission(input, currentPlayer, room.usedPlayers);
 
     if (!result.valid) {
+      // Every wrong guess costs a life
+      room.lives[socket.id] -= 1;
+      room.lastWrongGuess[socket.id] = Date.now();
+
       socket.emit("invalid_move", { reason: result.reason, input });
+      io.to(code).emit("lives_update", { lives: room.lives });
+
+      if (room.lives[socket.id] <= 0) {
+        activePlayerLoses(io, code, room, "out_of_lives");
+      }
       return;
     }
 
@@ -312,6 +336,8 @@ function startGame(io, code, room) {
   room.chain = [];
   room.usedPlayers = [starter];
   room.seedPlayer = starter;
+  room.lives = Object.fromEntries(room.players.map((p) => [p.id, MAX_LIVES]));
+  room.lastWrongGuess = {};
 
   const firstPlayer = room.players[Math.floor(Math.random() * 2)];
   room.activePlayerId = firstPlayer.id;
@@ -325,6 +351,8 @@ function startGame(io, code, room) {
     activePlayerId: firstPlayer.id,
     players: room.players.map((p) => ({ id: p.id, name: p.name })),
     turnDuration: TURN_DURATION,
+    lives: room.lives,
+    maxLives: MAX_LIVES,
   });
 
   startTurnTimer(io, code, room);

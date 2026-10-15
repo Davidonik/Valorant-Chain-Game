@@ -58,8 +58,18 @@ function getRandomStarter(region) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+// "Laz (TH)" -> "Laz": tags added to tell apart players with the same name
+function baseName(name) {
+  return name.replace(/\s*\([^)]*\)$/, "");
+}
+
 function validateSubmission(input, currentPlayer, usedPlayers) {
-  const found = findPlayer(input);
+  // If several players share the typed name, prefer the current player's teammate
+  const n = typeof input === "string" ? normalize(input) : "";
+  const teammateMatch = getTeammates(currentPlayer).find(
+    (t) => normalize(t) === n || normalize(baseName(t)) === n
+  );
+  const found = teammateMatch ?? findPlayer(input);
 
   if (!found) {
     return { valid: false, reason: "PLAYER_NOT_FOUND" };

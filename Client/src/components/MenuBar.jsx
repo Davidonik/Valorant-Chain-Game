@@ -3,10 +3,10 @@ import { PATCH_NOTES } from "../patchNotes";
 import FeedbackForm from "./FeedbackForm";
 
 // Link to the spreadsheet of all players — leave empty until it's published
-const PLAYER_SHEET_URL = "";
+const PLAYER_SHEET_URL = "https://docs.google.com/spreadsheets/d/16RrUFvPNNuXOzFcm785uYSdBrCZQLTGGxuEO9Pxkumg/edit?usp=sharing";
 
 const CONTACT_LINKS = [
-  { label: "LinkedIn", text: "long-pham-david", href: "https://www.linkedin.com/in/long-pham-david" },
+  { label: "LinkedIn", text: "Long (David) Pham", href: "https://www.linkedin.com/in/long-pham-david" },
   { label: "GitHub", text: "Davidonik", href: "https://github.com/Davidonik" },
   { label: "Email", text: "davidphamlong0@gmail.com", href: "mailto:davidphamlong0@gmail.com" },
 ];
@@ -57,6 +57,11 @@ export default function MenuBar() {
                     the Americas, EMEA, APAC and China, each listed with their teammates
                     and the teams they shared.
                   </p>
+                  <p className="modal-text">
+                    The pro player has to meet these requirements to appear in the game:
+                    <li>The player attended a Masters, Campions or an International League (EMEA, Americas, Pacific, China)</li>
+                    <li>Played at least one game for that team</li>
+                  </p>
                   {PLAYER_SHEET_URL ? (
                     <a className="modal-link" href={PLAYER_SHEET_URL} target="_blank" rel="noreferrer">
                       View the full player list
@@ -73,10 +78,10 @@ export default function MenuBar() {
                 <h2 className="modal-title">How to Play</h2>
                 <ul className="modal-list">
                   <li>The game opens with a random pro player.</li>
-                  <li>On your turn, name someone who was their teammate.</li>
-                  <li>That player becomes the next link, and your opponent goes.</li>
+                  <li>Player 1 names someone who is/was their teammate.</li>
+                  <li>That player becomes the next link, and player 2 goes.</li>
                   <li>Each player can only be used once per game.</li>
-                  <li>Run out of time, or get left with no teammates to name, and you lose.</li>
+                  <li>Run out of time, no heart left (each incorrect guess = - 1 heart; 3 hearts total), or get left with no teammates to name, and you lose.</li>
                 </ul>
               </>
             )}

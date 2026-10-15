@@ -36,6 +36,7 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
   const reasonText = {
     timeout: `${result?.loserName} ran out of time`,
     no_moves: `${result?.loserName} had no valid moves left`,
+    out_of_lives: `${result?.loserName} ran out of lives`,
     disconnect: `${result?.disconnectedName ?? "Opponent"} disconnected`,
   }[result?.reason] ?? "";
 

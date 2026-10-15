@@ -1,7 +1,7 @@
 import redIcon from "../assets/red-heart.png";
 import greyIcon from "../assets/grey-heart.png";
 
-// HP bar — red heart per life left, grey heart per life lost
+// HP bar - red heart per life left, grey heart per life lost
 export default function Hearts({ lives, maxLives }) {
   return (
     <div className="hearts" aria-label={`${lives} of ${maxLives} lives left`}>

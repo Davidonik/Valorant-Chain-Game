@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const { handleSocketEvents } = require("./roomManager");
 const { handleFeedbackEvents } = require("./feedback");
+const { handleDailyEvents } = require("./daily");
 
 const app = express();
 app.use(cors());
@@ -13,7 +14,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://valochain.vercel.app", // Vercel URL once deployed
+    // Vercel URL once deployed, plus the Vite dev server for local testing
+    origin: ["https://valochain.vercel.app", /^http:\/\/localhost:\d+$/],
     methods: ["GET", "POST"],
   },
 });
@@ -28,6 +30,7 @@ io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
   handleSocketEvents(io, socket);
   handleFeedbackEvents(socket);
+  handleDailyEvents(socket);
 
   socket.on("disconnect", () => {
     console.log(`Socket disconnected: ${socket.id}`);

@@ -7,7 +7,7 @@ import Hearts from "../components/Hearts";
 const MAX_SUGGESTIONS = 6;
 const WRONG_GUESS_COOLDOWN_MS = 1000; // matches the server
 
-export default function Game({ playerName, roomCode, initialGameState, onGameOver }) {
+export default function Game({ playerName, initialGameState, onGameOver }) {
   const [gameState, setGameState] = useState(initialGameState);
   const [chain, setChain] = useState([]);
   const [input, setInput] = useState("");
@@ -20,6 +20,7 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
   const inputRef = useRef(null);
 
   const myId = socket.id;
+  const solo = !!gameState?.solo;
   const isMyTurn = gameState?.activePlayerId === myId;
   const seedPlayer = gameState?.seedPlayer;
   const turnDuration = gameState?.turnDuration ?? 15;
@@ -160,17 +161,30 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
   return (
     <div className="page game-page">
       {/* Header row */}
-      <div className="game-header">
-        <div className="player-side">
-          <div className="player-badge me">{me?.name ?? playerName}</div>
-          <Hearts lives={livesOf(myId)} maxLives={maxLives} />
+      {solo ? (
+        <div className="game-header">
+          <div className="player-side">
+            <div className="player-badge me">Solo</div>
+            <Hearts lives={livesOf(myId)} maxLives={maxLives} />
+          </div>
+          <div className="player-side">
+            <span className="chain-label">Chain</span>
+            <span className="solo-score">{chain.length}</span>
+          </div>
         </div>
-        <div className="vs-badge">VS</div>
-        <div className="player-side">
-          <div className="player-badge opp">{opponent?.name ?? "Opponent"}</div>
-          <Hearts lives={livesOf(opponent?.id)} maxLives={maxLives} />
+      ) : (
+        <div className="game-header">
+          <div className="player-side">
+            <div className="player-badge me">{me?.name ?? playerName}</div>
+            <Hearts lives={livesOf(myId)} maxLives={maxLives} />
+          </div>
+          <div className="vs-badge">VS</div>
+          <div className="player-side">
+            <div className="player-badge opp">{opponent?.name ?? "Opponent"}</div>
+            <Hearts lives={livesOf(opponent?.id)} maxLives={maxLives} />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Timer */}
       <Timer
@@ -180,9 +194,11 @@ export default function Game({ playerName, roomCode, initialGameState, onGameOve
       />
 
       {/* Turn indicator */}
-      <div className={`turn-label ${isMyTurn ? "my-turn" : "their-turn"}`}>
-        {turnLabel}
-      </div>
+      {!solo && (
+        <div className={`turn-label ${isMyTurn ? "my-turn" : "their-turn"}`}>
+          {turnLabel}
+        </div>
+      )}
 
       {/* Current player to link from */}
       <div className="current-player-box">

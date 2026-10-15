@@ -2,7 +2,17 @@ import { useEffect, useState } from "react";
 import socket from "../socket";
 import Chain from "../components/Chain";
 
-export default function GameOver({ playerName, roomCode, result, onHome }) {
+const SOLO_BEST_KEY = "valochain-solo-best";
+
+function readSoloBest() {
+  try {
+    return Number(localStorage.getItem(SOLO_BEST_KEY)) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+export default function GameOver({ result, onHome }) {
   const [votes, setVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [opponentLeft, setOpponentLeft] = useState(false);
@@ -11,6 +21,21 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
   const iWon = result?.winnerId === myId;
   const isDisconnect = result?.reason === "disconnect";
   const canRematch = !isDisconnect && !opponentLeft;
+
+  // Solo: score is the chain length, best kept in this browser
+  const solo = !!result?.solo;
+  const chainLength = result?.chain?.length ?? 0;
+  const [prevBest] = useState(readSoloBest);
+  const newBest = solo && chainLength > prevBest;
+
+  useEffect(() => {
+    if (!newBest) return;
+    try {
+      localStorage.setItem(SOLO_BEST_KEY, String(chainLength));
+    } catch {
+      // storage blocked - best score just isn't kept
+    }
+  }, [newBest, chainLength]);
 
   useEffect(() => {
     function onRematchVote({ votes: v }) {
@@ -33,20 +58,38 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
     socket.emit("rematch_request");
   }
 
-  const reasonText = {
-    timeout: `${result?.loserName} ran out of time`,
-    no_moves: `${result?.loserName} had no valid moves left`,
-    out_of_lives: `${result?.loserName} ran out of lives`,
-    disconnect: `${result?.disconnectedName ?? "Opponent"} disconnected`,
-  }[result?.reason] ?? "";
+  const lastPlayer = result?.chain?.at(-1)?.canonicalName ?? result?.seedPlayer;
+  const reasonText = (solo
+    ? {
+        timeout: "You ran out of time",
+        no_moves: `Dead end - every teammate of ${lastPlayer} was already used`,
+        out_of_lives: "You ran out of lives",
+      }
+    : {
+        timeout: `${result?.loserName} ran out of time`,
+        no_moves: `${result?.loserName} had no valid moves left`,
+        out_of_lives: `${result?.loserName} ran out of lives`,
+        disconnect: `${result?.disconnectedName ?? "Opponent"} disconnected`,
+      })[result?.reason] ?? "";
 
   return (
     <div className="page gameover-page">
-      <div className={`result-banner ${iWon ? "win" : "lose"}`}>
-        {isDisconnect ? "Opponent left" : iWon ? "You win!" : "You lose"}
-      </div>
+      {solo ? (
+        <div className={`result-banner ${newBest ? "win" : "lose"}`}>
+          Chain of {chainLength}
+        </div>
+      ) : (
+        <div className={`result-banner ${iWon ? "win" : "lose"}`}>
+          {isDisconnect ? "Opponent left" : iWon ? "You win!" : "You lose"}
+        </div>
+      )}
 
       <p className="reason-text">{reasonText}</p>
+      {solo && (
+        <p className="reason-text">
+          {newBest ? "New personal best!" : `Personal best: ${prevBest}`}
+        </p>
+      )}
 
       {canRematch && (
         <div className="rematch-row">
@@ -55,7 +98,9 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
             onClick={handleRematch}
             disabled={voted}
           >
-            {voted ? `Waiting… (${votes}/2)` : "Rematch"}
+            {solo
+              ? voted ? "Starting…" : "Play Again"
+              : voted ? `Waiting… (${votes}/2)` : "Rematch"}
           </button>
           <button className="btn btn-ghost" onClick={onHome}>Main Menu</button>
         </div>

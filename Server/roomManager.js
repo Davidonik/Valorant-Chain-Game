@@ -44,6 +44,26 @@ function roomInfo(room) {
   };
 }
 
+function newRoom(code, socketId, playerName, region, solo = false) {
+  return {
+    code,
+    solo,                    // solo practice: one player, the turn never passes
+    region: region ?? null,  // null = any region
+    status: "waiting",       // waiting | playing | finished
+    players: [{ id: socketId, name: playerName }],
+    activePlayerId: null,
+    chain: [],               // [{ submittedBy, canonicalName, teams }]
+    usedPlayers: [],
+    seedPlayer: null,
+    timer: null,
+    timerStarted: null,
+    cleanupTimer: null,
+    lives: {},               // { socketId: livesLeft }
+    lastWrongGuess: {},      // { socketId: timestamp }
+    rematchVotes: new Set(),
+  };
+}
+
 function getOpponent(room, socketId) {
   return room.players.find((p) => p.id !== socketId);
 }
@@ -123,7 +143,7 @@ function activePlayerLoses(io, code, room, reason) {
   const loser = room.players.find((p) => p.id === room.activePlayerId);
   const winner = room.players.find((p) => p.id !== room.activePlayerId);
 
-  if (!loser || !winner) return;
+  if (!loser || (!winner && !room.solo)) return;
 
   // What the loser could have answered
   const currentPlayer =
@@ -139,12 +159,13 @@ function activePlayerLoses(io, code, room, reason) {
 
   io.to(code).emit("game_over", {
     reason,
+    solo: room.solo,
     currentPlayer,
     missedAnswers,
     loserId: loser.id,
     loserName: loser.name,
-    winnerId: winner.id,
-    winnerName: winner.name,
+    winnerId: winner?.id ?? null,
+    winnerName: winner?.name ?? null,
     seedPlayer: room.seedPlayer,
     chain: room.chain,
   });
@@ -171,23 +192,7 @@ function handleSocketEvents(io, socket) {
   // ── CREATE ROOM ────────────────────────────────────────────────────────────
   socket.on("create_room", ({ playerName, region }, callback) => {
     const code = generateRoomCode();
-
-    const room = {
-      code,
-      region: region ?? null,  // null = any region
-      status: "waiting",       // waiting | playing | finished
-      players: [{ id: socket.id, name: playerName }],
-      activePlayerId: null,
-      chain: [],               // [{ submittedBy, canonicalName, teams }]
-      usedPlayers: [],
-      seedPlayer: null,
-      timer: null,
-      timerStarted: null,
-      cleanupTimer: null,
-      lives: {},               // { socketId: livesLeft }
-      lastWrongGuess: {},      // { socketId: timestamp }
-      rematchVotes: new Set(),
-    };
+    const room = newRoom(code, socket.id, playerName, region);
 
     rooms.set(code, room);
     socket.join(code);
@@ -196,12 +201,28 @@ function handleSocketEvents(io, socket) {
     callback({ success: true, code, room: roomInfo(room) });
   });
 
+  // ── SOLO PRACTICE: a one-player room that starts right away ───────────────
+  socket.on("create_solo", ({ playerName, region } = {}, callback) => {
+    if (typeof callback !== "function") return;
+    if (getRoomBySocket(socket.id)) closeRoom(io, socket);
+
+    const code = generateRoomCode();
+    const room = newRoom(code, socket.id, playerName || "You", region, true);
+
+    rooms.set(code, room);
+    socket.join(code);
+
+    console.log(`Solo game ${code} started by ${room.players[0].name} (${socket.id})`);
+    callback({ success: true });
+    startGame(io, code, room);
+  });
+
   // ── JOIN ROOM ──────────────────────────────────────────────────────────────
   socket.on("join_room", ({ code, playerName }, callback) => {
     const upperCode = code.toUpperCase();
     const room = rooms.get(upperCode);
 
-    if (!room) {
+    if (!room || room.solo) {
       return callback({ success: false, error: "Room not found." });
     }
     if (room.status !== "waiting") {
@@ -298,8 +319,8 @@ function handleSocketEvents(io, socket) {
     });
     room.usedPlayers.push(result.canonicalName);
 
-    // Switch turns
-    const opponent = getOpponent(room, socket.id);
+    // Switch turns (solo: stays with the same player)
+    const opponent = room.solo ? room.players[0] : getOpponent(room, socket.id);
     room.activePlayerId = opponent.id;
 
     const availableTeammates = getTeammates(result.canonicalName).filter(
@@ -314,6 +335,18 @@ function handleSocketEvents(io, socket) {
       nextActivePlayerId: opponent.id,
       availableCount: availableTeammates.length,
     });
+
+    // Solo: a player with no unused teammates is a dead end
+    if (availableTeammates.length === 0 && room.solo) {
+      io.to(code).emit("game_over", {
+        reason: "no_moves",
+        solo: true,
+        seedPlayer: room.seedPlayer,
+        chain: room.chain,
+      });
+      finishGame(io, code, room);
+      return;
+    }
 
     // Check if opponent has any valid moves left
     if (availableTeammates.length === 0) {
@@ -351,7 +384,7 @@ function handleSocketEvents(io, socket) {
     room.rematchVotes.add(socket.id);
     io.to(code).emit("rematch_vote", { votes: room.rematchVotes.size });
 
-    if (room.rematchVotes.size === 2) {
+    if (room.rematchVotes.size === room.players.length) {
       room.rematchVotes.clear();
       startGame(io, code, room);
     }
@@ -384,7 +417,7 @@ function startGame(io, code, room) {
   room.lives = Object.fromEntries(room.players.map((p) => [p.id, MAX_LIVES]));
   room.lastWrongGuess = {};
 
-  const firstPlayer = room.players[Math.floor(Math.random() * 2)];
+  const firstPlayer = room.players[Math.floor(Math.random() * room.players.length)];
   room.activePlayerId = firstPlayer.id;
 
   console.log(
@@ -392,6 +425,7 @@ function startGame(io, code, room) {
   );
 
   io.to(code).emit("game_start", {
+    solo: room.solo,
     seedPlayer: starter,
     activePlayerId: firstPlayer.id,
     players: room.players.map((p) => ({ id: p.id, name: p.name })),

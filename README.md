@@ -1,8 +1,8 @@
-# ValoChain 🎮
+# ValoChain
  
-A real-time 2-player web game where you chain Valorant pro players by their teammates. Name a player who was teammates with the current player — run out of options or time and you lose.
+A 2-player web game where you chain Valorant pro players by their teammates. Name a player who was teammates with the current player - run out of options, life or time and you lose.
  
-**[▶ Play Now](https://valorantchain.vercel.app)**
+**[Play Now](https://valochain.vercel.app)**
  
 ---
  
@@ -77,7 +77,7 @@ VITE_SERVER_URL=http://localhost:3001
 ### Backend (Railway)
 1. Connect your GitHub repo to [Railway](https://railway.app)
 2. Set the root directory to `server/`
-3. Railway auto-detects Node — no extra config needed
+3. Railway auto-detects Node - no extra config needed
 4. Copy the Railway URL (e.g. `https://valochain-production.up.railway.app`)
 ### Frontend (Vercel)
 1. Import the repo on [Vercel](https://vercel.com)

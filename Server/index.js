@@ -13,7 +13,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // tighten this to your Vercel URL once deployed
+    origin: "https://valochain.vercel.app", // Vercel URL once deployed
     methods: ["GET", "POST"],
   },
 });

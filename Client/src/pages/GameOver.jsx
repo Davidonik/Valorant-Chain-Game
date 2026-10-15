@@ -43,7 +43,7 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
   return (
     <div className="page gameover-page">
       <div className={`result-banner ${iWon ? "win" : "lose"}`}>
-        {isDisconnect ? "Opponent left" : iWon ? "You win! 🎉" : "You lose 😔"}
+        {isDisconnect ? "Opponent left" : iWon ? "You win!" : "You lose"}
       </div>
 
       <p className="reason-text">{reasonText}</p>

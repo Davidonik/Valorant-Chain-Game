@@ -87,9 +87,11 @@ export default function MenuBar() {
                   </p>
                   <p className="modal-text">
                     The pro player has to meet these requirements to appear in the game:
-                    <li>The player attended a Masters, Campions or an International League (EMEA, Americas, Pacific, China)</li>
-                    <li>Played at least one game for that team</li>
                   </p>
+                  <ul className="modal-list">
+                    <li>The player attended a Masters, Champions or an International League (EMEA, Americas, Pacific, China)</li>
+                    <li>Played at least one game for that team</li>
+                  </ul>
                   {PLAYER_SHEET_URL ? (
                     <a className="modal-link" href={PLAYER_SHEET_URL} target="_blank" rel="noreferrer">
                       View the full player list
@@ -109,7 +111,7 @@ export default function MenuBar() {
                   <li>Player 1 names someone who is/was their teammate.</li>
                   <li>That player becomes the next link, and player 2 goes.</li>
                   <li>Each player can only be used once per game.</li>
-                  <li>Run out of time, no heart left (each incorrect guess = - 1 heart; 3 hearts total), or get left with no teammates to name, and you lose.</li>
+                  <li>Run out of time, no heart left (each incorrect guess = -1 heart; 3 hearts total), or get left with no teammates to name, and you lose.</li>
                 </ul>
               </>
             )}

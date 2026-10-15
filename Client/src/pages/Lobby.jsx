@@ -112,6 +112,11 @@ export default function Lobby({ room, onBack, onHostLeft }) {
         )}
       </div>
 
+      <div className="fun-fact">
+        <span className="chain-label">Did you know?</span>
+        <p key={factIndex} className="fun-fact-text">{FUN_FACTS[factIndex]}</p>
+      </div>
+
       {isHost && !full && (
       <div className="card">
         <div className={`room-code ${revealed ? "" : "hidden"}`}>
@@ -129,11 +134,6 @@ export default function Lobby({ room, onBack, onHostLeft }) {
         <div className="spinner" />
       </div>
       )}
-
-      <div className="fun-fact">
-        <span className="chain-label">Did you know?</span>
-        <p key={factIndex} className="fun-fact-text">{FUN_FACTS[factIndex]}</p>
-      </div>
 
       <button className="btn btn-ghost" onClick={onBack}>Leave Room</button>
     </div>

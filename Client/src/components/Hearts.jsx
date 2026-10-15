@@ -1,14 +1,19 @@
-// HP bar — one heart per life. To use images, swap the ♥ for
-// <img src={full ? heartFull : heartEmpty} alt="" /> (imported from src/assets).
+import redIcon from "../assets/red-heart.png";
+import greyIcon from "../assets/grey-heart.png";
+
+// HP bar — red heart per life left, grey heart per life lost
 export default function Hearts({ lives, maxLives }) {
   return (
     <div className="hearts" aria-label={`${lives} of ${maxLives} lives left`}>
       {Array.from({ length: maxLives }, (_, i) => {
         const full = i < lives;
         return (
-          <span key={i} className={`heart ${full ? "full" : "empty"}`}>
-            ♥
-          </span>
+          <img
+            key={i}
+            className={`heart ${full ? "full" : "empty"}`}
+            src={full ? redIcon : greyIcon}
+            alt=""
+          />
         );
       })}
     </div>

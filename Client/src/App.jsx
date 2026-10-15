@@ -12,9 +12,11 @@ import "./App.css";
 export default function App() {
   const [page, setPage] = useState("home");
   const [playerName, setPlayerName] = useState("");
-  const [roomCode, setRoomCode] = useState("");
+  const [room, setRoom] = useState(null);             // lobby info: code, region, host, players
+  const roomCode = room?.code ?? "";
   const [gameState, setGameState] = useState(null);   // from game_start
   const [result, setResult] = useState(null);         // from game_over
+  const [notice, setNotice] = useState("");           // message shown on the home page
 
   // Listen here (not in Lobby/GameOver) so the event can't arrive before a
   // page has mounted — the joiner gets game_start right after the join ack.
@@ -23,13 +25,20 @@ export default function App() {
       setGameState(data);
       setPage("game");
     }
+    function onRoomUpdate(data) {
+      setRoom(data);
+    }
     socket.on("game_start", onGameStart);
-    return () => socket.off("game_start", onGameStart);
+    socket.on("room_update", onRoomUpdate);
+    return () => {
+      socket.off("game_start", onGameStart);
+      socket.off("room_update", onRoomUpdate);
+    };
   }, []);
 
-  function goToLobby({ name, code }) {
+  function goToLobby({ name, room }) {
     setPlayerName(name);
-    setRoomCode(code);
+    setRoom(room);
     setPage("lobby");
   }
 
@@ -38,8 +47,14 @@ export default function App() {
     setPage("gameover");
   }
 
+  function onHostLeft() {
+    goHome();
+    setNotice("The host left the room.");
+  }
+
   function goHome() {
     socket.emit("leave_room");
+    setNotice("");
     setPage("home");
     setGameState(null);
     setResult(null);
@@ -49,13 +64,13 @@ export default function App() {
     <div className="app">
       <MenuBar />
       {page === "home" && (
-        <Home onJoined={goToLobby} />
+        <Home onJoined={goToLobby} notice={notice} />
       )}
       {page === "lobby" && (
         <Lobby
-          playerName={playerName}
-          roomCode={roomCode}
+          room={room}
           onBack={goHome}
+          onHostLeft={onHostLeft}
         />
       )}
       {page === "game" && (

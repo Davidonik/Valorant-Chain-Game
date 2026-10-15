@@ -63,7 +63,7 @@ export default function GameOver({ playerName, roomCode, result, onHome }) {
 
       {!canRematch && (
         <>
-          {opponentLeft && <p className="reason-text">Your opponent left — no rematch available.</p>}
+          {opponentLeft && <p className="reason-text">Your opponent left - no rematch available.</p>}
           <button className="btn btn-ghost" onClick={onHome}>Main Menu</button>
         </>
       )}

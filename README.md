@@ -2,24 +2,24 @@
  
 A real-time 2-player web game where you chain Valorant pro players by their teammates. Name a player who was teammates with the current player — run out of options or time and you lose.
  
-**[▶ Play Now](https://your-vercel-url.vercel.app)** <!-- replace with your actual URL -->
+**[▶ Play Now](https://valorantchain.vercel.app)**
  
 ---
  
 ## How to Play
  
-1. One player creates a room and shares the 4-letter code
+1. One player creates a room and shares the 5-letter code
 2. The other player joins with the code
 3. A random pro player is picked as the starting point
 4. Players take turns naming a pro who was teammates with the current player
 5. You have **15 seconds** per turn
-6. Lose if you: run out of time, can't name a valid teammate, or name someone already used
+6. Lose if you: run out of time, lose you hp (incorrect guess = -1 hp, 3 hp total)
 ## Rules
  
 - Any player who appeared on the same **org roster** counts as a teammate (not just tournament rosters)
-- Player names are **case-insensitive**
+- Player names are NOT **case-sensitive**
 - Once a player is used, they can't be used again in that game
-- Coverage: VCT 2021–present, major regions (NA, EMEA, APAC, BR, LATAM)
+- Coverage: Masters, Champions and International leagues (EMEA, Pacific, Americas and China)
 ---
  
 ## Tech Stack

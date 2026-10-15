@@ -11,28 +11,56 @@ const CONTACT_LINKS = [
   { label: "Email", text: "davidphamlong0@gmail.com", href: "mailto:davidphamlong0@gmail.com" },
 ];
 
+const MENU_ITEMS = [
+  ["about", "About"],
+  ["howto", "How to Play"],
+  ["patch", "Patch Notes"],
+  ["feedback", "Feedback"],
+  ["contact", "Contact"],
+];
+
 export default function MenuBar() {
   const [open, setOpen] = useState(null); // "about" | "howto" | "patch" | "feedback" | "contact"
+  const [menuOpen, setMenuOpen] = useState(false); // phone dropdown
 
   useEffect(() => {
-    if (!open) return;
+    if (!open && !menuOpen) return;
     function onKey(e) {
-      if (e.key === "Escape") setOpen(null);
+      if (e.key === "Escape") {
+        setOpen(null);
+        setMenuOpen(false);
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, menuOpen]);
+
+  function openSection(key) {
+    setOpen(key);
+    setMenuOpen(false);
+  }
 
   return (
     <>
       <nav className="menu-bar">
         <span className="menu-brand">ValoChain</span>
-        <div className="menu-links">
-          <button className="menu-link" onClick={() => setOpen("about")}>About</button>
-          <button className="menu-link" onClick={() => setOpen("howto")}>How to Play</button>
-          <button className="menu-link" onClick={() => setOpen("patch")}>Patch Notes</button>
-          <button className="menu-link" onClick={() => setOpen("feedback")}>Feedback</button>
-          <button className="menu-link" onClick={() => setOpen("contact")}>Contact</button>
+
+        {/* Shown instead of the links on narrow screens (see App.css) */}
+        <button
+          className="menu-toggle"
+          aria-label="Menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
+
+        <div className={`menu-links ${menuOpen ? "open" : ""}`}>
+          {MENU_ITEMS.map(([key, label]) => (
+            <button key={key} className="menu-link" onClick={() => openSection(key)}>
+              {label}
+            </button>
+          ))}
         </div>
       </nav>
 
@@ -54,7 +82,7 @@ export default function MenuBar() {
                   <h3 className="patch-version">Player database</h3>
                   <p className="modal-text">
                     Every answer is checked against a database of 600+ pro players from
-                    the Americas, EMEA, APAC and China, each listed with their teammates
+                    the Americas, EMEA, Pacific and China, each listed with their teammates
                     and the teams they shared.
                   </p>
                   <p className="modal-text">

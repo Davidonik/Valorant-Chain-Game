@@ -36,7 +36,7 @@ export default function FeedbackForm() {
   }
 
   if (sent) {
-    return <p className="subtitle">Thanks — your feedback was sent!</p>;
+    return <p className="subtitle">Thank you! Your feedback was sent!</p>;
   }
 
   return (

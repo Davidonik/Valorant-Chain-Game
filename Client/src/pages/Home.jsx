@@ -1,9 +1,8 @@
 import { useState } from "react";
 import socket from "../socket";
+import RegionPicker from "../components/RegionPicker";
 
-const REGIONS = ["Americas", "EMEA", "APAC", "China"];
-
-export default function Home({ onJoined }) {
+export default function Home({ onJoined, notice }) {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [mode, setMode] = useState(null); // "create" | "join"
@@ -18,7 +17,7 @@ export default function Home({ onJoined }) {
     socket.emit("create_room", { playerName: name.trim(), region: region || null }, (res) => {
       setLoading(false);
       if (res.success) {
-        onJoined({ name: name.trim(), code: res.code });
+        onJoined({ name: name.trim(), room: res.room });
       } else {
         setError(res.error || "Could not create room.");
       }
@@ -33,7 +32,7 @@ export default function Home({ onJoined }) {
     socket.emit("join_room", { playerName: name.trim(), code: code.trim() }, (res) => {
       setLoading(false);
       if (res.success) {
-        onJoined({ name: name.trim(), code: code.trim().toUpperCase() });
+        onJoined({ name: name.trim(), room: res.room });
       } else {
         setError(res.error || "Could not join room.");
       }
@@ -68,16 +67,7 @@ export default function Home({ onJoined }) {
 
         {mode === "create" && (
           <>
-            <select
-              className="input"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-            >
-              <option value="">Any region</option>
-              {REGIONS.map((r) => (
-                <option key={r} value={r}>{r}</option>
-              ))}
-            </select>
+            <RegionPicker value={region} onChange={setRegion} />
             <button className="btn btn-primary" onClick={handleCreate} disabled={loading}>
               {loading ? "Creating…" : "Create Room"}
             </button>
@@ -103,6 +93,7 @@ export default function Home({ onJoined }) {
         )}
 
         {error && <p className="error">{error}</p>}
+        {notice && !error && <p className="notice">{notice}</p>}
       </div>
     </div>
   );

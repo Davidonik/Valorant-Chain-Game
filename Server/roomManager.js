@@ -34,6 +34,16 @@ function getRoomBySocket(socketId) {
   return null;
 }
 
+// What the lobby needs to show: who's in, who's host, which region
+function roomInfo(room) {
+  return {
+    code: room.code,
+    region: room.region,
+    hostId: room.players[0]?.id ?? null,
+    players: room.players.map((p) => ({ id: p.id, name: p.name })),
+  };
+}
+
 function getOpponent(room, socketId) {
   return room.players.find((p) => p.id !== socketId);
 }
@@ -85,6 +95,15 @@ function closeRoom(io, socket) {
 
   const opponent = getOpponent(room, socket.id);
   const leaver = room.players.find((p) => p.id === socket.id);
+
+  // Guest left the lobby before the start — keep the room open for the host
+  if (room.status === "waiting" && opponent && leaver !== room.players[0]) {
+    room.players = room.players.filter((p) => p.id !== socket.id);
+    socket.leave(code);
+    io.to(code).emit("room_update", roomInfo(room));
+    console.log(`${leaver.name} (${socket.id}) left room ${code}`);
+    return;
+  }
 
   if (opponent && room.status === "playing") {
     socket.to(code).emit("opponent_disconnected", {
@@ -174,7 +193,7 @@ function handleSocketEvents(io, socket) {
     socket.join(code);
 
     console.log(`Room ${code} created by ${playerName} (${socket.id})`);
-    callback({ success: true, code });
+    callback({ success: true, code, room: roomInfo(room) });
   });
 
   // ── JOIN ROOM ──────────────────────────────────────────────────────────────
@@ -199,10 +218,36 @@ function handleSocketEvents(io, socket) {
     socket.join(upperCode);
 
     console.log(`${playerName} (${socket.id}) joined room ${upperCode}`);
-    callback({ success: true });
+    callback({ success: true, room: roomInfo(room) });
 
-    // Both players connected — start the game
-    startGame(io, upperCode, room);
+    // Host starts the game from the lobby
+    socket.to(upperCode).emit("room_update", roomInfo(room));
+  });
+
+  // ── SET REGION (host only, before the game starts) ─────────────────────────
+  socket.on("set_region", ({ region } = {}) => {
+    const found = getRoomBySocket(socket.id);
+    if (!found) return;
+    const { code, room } = found;
+
+    if (room.status !== "waiting") return;
+    if (room.players[0].id !== socket.id) return;
+
+    room.region = typeof region === "string" && region ? region : null;
+    io.to(code).emit("room_update", roomInfo(room));
+  });
+
+  // ── START GAME (host only) ─────────────────────────────────────────────────
+  socket.on("start_game", () => {
+    const found = getRoomBySocket(socket.id);
+    if (!found) return;
+    const { code, room } = found;
+
+    if (room.status !== "waiting") return;
+    if (room.players[0].id !== socket.id) return;
+    if (room.players.length < 2) return;
+
+    startGame(io, code, room);
   });
 
   // ── SUBMIT PLAYER ──────────────────────────────────────────────────────────

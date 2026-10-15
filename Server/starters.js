@@ -10,7 +10,7 @@
 const STARTERS = {
   Americas: ["TenZ", "aspas", "Demon1", "yay", "zekken", "Less", "Sacy", "leaf", "johnqt", "Boostio"],
   EMEA:     ["Derke", "Boaster", "Chronicle", "Alfajer", "nAts", "cNed", "Leo", "Shao", "MiniBoo", "benjyfishy"],
-  APAC:     ["f0rsakeN", "Jinggg", "something", "MaKo", "Meteor", "t3xture", "d4v41", "Karon", "Munchkin", "Monyet"],
+  Pacific:  ["f0rsakeN", "Jinggg", "something", "MaKo", "Meteor", "t3xture", "d4v41", "Karon", "Munchkin", "Monyet"],
   China:    ["ZmjjKK", "nobody", "CHICHOO", "whzy", "Smoggy", "Life", "AAAAY", "Autumn", "BerLIN"],
 };
 

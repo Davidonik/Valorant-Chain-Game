@@ -168,7 +168,7 @@ export default function Game({ playerName, initialGameState, onGameOver }) {
             <Hearts lives={livesOf(myId)} maxLives={maxLives} />
           </div>
           <div className="player-side">
-            <span className="chain-label">Chain</span>
+            <span className="chain-label">Score</span>
             <span className="solo-score">{chain.length}</span>
           </div>
         </div>

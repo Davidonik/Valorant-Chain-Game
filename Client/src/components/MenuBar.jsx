@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PATCH_NOTES } from "../patchNotes";
 import FeedbackForm from "./FeedbackForm";
 import logo from "../assets/valchainlogo.png";
+import helpIcon from "../assets/help.png";
+import sunIcon from "../assets/sun.png";
+import moonIcon from "../assets/moon.png";
 
 // Link to the spreadsheet of all players - leave empty until it's published
 const PLAYER_SHEET_URL = "https://docs.google.com/spreadsheets/d/16RrUFvPNNuXOzFcm785uYSdBrCZQLTGGxuEO9Pxkumg/edit?usp=sharing";
@@ -25,34 +28,65 @@ function readSeenPatch() {
 }
 
 const MENU_ITEMS = [
-  ["about", "About"],
   ["howto", "How to Play"],
   ["patch", "Patch Notes"],
+];
+
+// Grouped under the ? icon
+const HELP_ITEMS = [
+  ["about", "About"],
   ["feedback", "Feedback"],
   ["contact", "Contact"],
 ];
 
-export default function MenuBar({ onHome }) {
+export default function MenuBar({ onHome, onDaily }) {
   const [open, setOpen] = useState(null); // "about" | "howto" | "patch" | "feedback" | "contact"
   const [menuOpen, setMenuOpen] = useState(false); // phone dropdown
+  const [helpOpen, setHelpOpen] = useState(false);  // ? dropdown
+  // index.html sets the starting theme before React loads
+  const [dark, setDark] = useState(() => document.documentElement.dataset.theme === "dark");
   const [seenPatch, setSeenPatch] = useState(readSeenPatch);
   const hasNewPatch = seenPatch !== LATEST_PATCH;
+  const helpRef = useRef(null);
 
   useEffect(() => {
-    if (!open && !menuOpen) return;
+    if (!open && !menuOpen && !helpOpen) return;
     function onKey(e) {
       if (e.key === "Escape") {
         setOpen(null);
         setMenuOpen(false);
+        setHelpOpen(false);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, menuOpen]);
+  }, [open, menuOpen, helpOpen]);
+
+  // Clicking anywhere outside the ? dropdown closes it
+  useEffect(() => {
+    if (!helpOpen) return;
+    function onClick(e) {
+      if (!helpRef.current?.contains(e.target)) setHelpOpen(false);
+    }
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [helpOpen]);
+
+  function toggleTheme() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.dataset.theme = next ? "dark" : "light";
+    try {
+      localStorage.setItem("valochain-theme", next ? "dark" : "light");
+    } catch {
+      // storage blocked - the choice lasts until the page is reloaded
+    }
+  }
 
   function openSection(key) {
     setOpen(key);
     setMenuOpen(false);
+    setHelpOpen(false);
     if (key === "patch" && hasNewPatch) {
       setSeenPatch(LATEST_PATCH);
       try {
@@ -87,18 +121,53 @@ export default function MenuBar({ onHome }) {
         </button>
 
         <div className={`menu-links ${menuOpen ? "open" : ""}`}>
+          {/* A page of its own, unlike the pop-up sections after it */}
+          <button className="menu-link menu-link-page" onClick={() => { setMenuOpen(false); onDaily(); }}>
+            Daily
+          </button>
           {MENU_ITEMS.map(([key, label]) => (
             <button key={key} className="menu-link" onClick={() => openSection(key)}>
               {label}
               {key === "patch" && hasNewPatch && <span className="new-dot" aria-label="New" />}
             </button>
           ))}
+
+          {/* Icon only on desktop; the label shows inside the phone menu */}
+          <button
+            className="menu-theme-toggle"
+            aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+            title={dark ? "Light mode" : "Dark mode"}
+            onClick={toggleTheme}
+          >
+            <img className="menu-theme-icon" src={dark ? sunIcon : moonIcon} alt="" />
+            <span className="menu-theme-label">{dark ? "Light mode" : "Dark mode"}</span>
+          </button>
+
+          {/* On phones the ? is hidden and these show as plain links (see App.css) */}
+          <div className="menu-help" ref={helpRef}>
+            <button
+              className="menu-help-toggle"
+              aria-label="Help and info"
+              aria-expanded={helpOpen}
+              onClick={() => setHelpOpen((o) => !o)}
+            >
+              <img src={helpIcon} alt="" />
+            </button>
+            <div className={`menu-help-items ${helpOpen ? "open" : ""}`}>
+              {HELP_ITEMS.map(([key, label]) => (
+                <button key={key} className="menu-link" onClick={() => openSection(key)}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </nav>
 
       {open && (
         <div className="modal-backdrop" onClick={() => setOpen(null)}>
           <div className="card modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" aria-label="Close" onClick={() => setOpen(null)}>✕</button>
             {open === "about" && (
               <>
                 <h2 className="modal-title">About</h2>
@@ -204,7 +273,6 @@ export default function MenuBar({ onHome }) {
               </>
             )}
 
-            <button className="btn btn-ghost" onClick={() => setOpen(null)}>Close</button>
           </div>
         </div>
       )}

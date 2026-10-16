@@ -10,6 +10,8 @@ import "./App.css";
 
 // pages: "home" | "lobby" | "game" | "gameover" | "daily"
 
+const SLOW_CONNECT_MS = 2500; // show the "waking up" notice after this long
+
 export default function App() {
   const [page, setPage] = useState("home");
   const [playerName, setPlayerName] = useState("");
@@ -17,7 +19,30 @@ export default function App() {
   const [gameState, setGameState] = useState(null);   // from game_start
   const [result, setResult] = useState(null);         // from game_over
   const [notice, setNotice] = useState("");
-  const [homeKey, setHomeKey] = useState(0);           // message shown on the home page
+  const [homeKey, setHomeKey] = useState(0);
+  const [slowConnect, setSlowConnect] = useState(false); // server still waking up           // message shown on the home page
+
+  // The free server host puts the server to sleep when idle, and waking it
+  // takes a while - say so instead of looking frozen
+  useEffect(() => {
+    let timer = null;
+    function onDisconnected() {
+      clearTimeout(timer);
+      timer = setTimeout(() => setSlowConnect(true), SLOW_CONNECT_MS);
+    }
+    function onConnected() {
+      clearTimeout(timer);
+      setSlowConnect(false);
+    }
+    if (!socket.connected) onDisconnected();
+    socket.on("connect", onConnected);
+    socket.on("disconnect", onDisconnected);
+    return () => {
+      clearTimeout(timer);
+      socket.off("connect", onConnected);
+      socket.off("disconnect", onDisconnected);
+    };
+  }, []);
 
   // Listen here (not in Lobby/GameOver) so the event can't arrive before a
   // page has mounted — the joiner gets game_start right after the join ack.
@@ -61,22 +86,35 @@ export default function App() {
     setResult(null);
   }
 
-  // Logo in the menu bar: leaving a live 1v1 ends it for the opponent, so ask first
+  // Menu bar links leave any room: a live 1v1 ends for the opponent, so ask first
+  function confirmLeave() {
+    return page !== "game" || gameState?.solo || window.confirm("Leave the game? Your opponent will win.");
+  }
+
   function onLogoClick() {
-    if (page === "game" && !gameState?.solo && !window.confirm("Leave the game? Your opponent will win.")) {
-      return;
-    }
+    if (!confirmLeave()) return;
     goHome();
     setHomeKey((k) => k + 1); // also resets Home back to its first screen
   }
 
+  function onDailyClick() {
+    if (!confirmLeave()) return;
+    goHome();
+    setPage("daily");
+  }
+
   return (
     <div className="app">
-      <MenuBar onHome={onLogoClick} />
-      {page === "home" && (
-        <Home key={homeKey} onJoined={goToLobby} onDaily={() => setPage("daily")} notice={notice} />
+      <MenuBar onHome={onLogoClick} onDaily={onDailyClick} />
+      {slowConnect && (
+        <p className="connection-notice">
+          Waking up the server - this can take up to a minute after it's been idle…
+        </p>
       )}
-      {page === "daily" && <Daily onHome={goHome} />}
+      {page === "home" && (
+        <Home key={homeKey} onJoined={goToLobby} notice={notice} />
+      )}
+      {page === "daily" && <Daily />}
       {page === "lobby" && (
         <Lobby
           room={room}

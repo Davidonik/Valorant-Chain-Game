@@ -1,15 +1,48 @@
 /* ── Reset / Base ──────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Light theme (default), grey menu bar. Text colors keep at least 4.5:1
+   contrast on the backgrounds they sit on. */
 :root {
-  --bg: #0f0f14;
-  --surface: #1a1a24;
-  --border: #2e2e40;
-  --accent: #ff4655;       /* Valorant red */
-  --accent2: #00d4aa;      /* teal for "mine" */
-  --text: #e8e8f0;
-  --muted: #888899;
+  --bg: #e6e6e6;           /* page */
+  --surface: #f9f9f9;      /* cards */
+  --field: #ffffff;        /* inputs and rows inside cards */
+  --border: #d4d4d4;
+  --control-border: #bdbdbd; /* inputs and outlined buttons */
+  --accent: #d13242;       /* red for buttons and borders - white text on it */
+  --accent-hover: #b82a39;
+  --accent-text: #d13242;  /* red used as text */
+  --accent-bright: #ff4655; /* original red - only on the dark menu bar */
+  --accent2: #00745f;      /* teal for "mine" */
+  --text: #222222;
+  --muted: #5c5c5c;
+  --win-bg: #e3f4ee;
+  --lose-bg: #fef2f3;
+  --bar: #2f2f2f;          /* menu bar */
+  --bar-hover: #3d3d3d;
+  --bar-text: #d8d8d8;
   --radius: 10px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  color-scheme: light;
+}
+
+/* Dark mode - switched from the menu bar (data-theme on <html>) */
+:root[data-theme="dark"] {
+  --bg: #1c1c1c;           /* neutral greys, no blue tint */
+  --surface: #262626;
+  --field: #1a1a1a;
+  --border: #383838;
+  --control-border: #4d4d4d;
+  --accent-text: #ff6b77;  /* the button red is too dark to read on dark */
+  --accent2: #2fd3b0;
+  --text: #e6e6e6;
+  --muted: #a3a3a3;
+  --win-bg: #1d3029;
+  --lose-bg: #3a2225;
+  --bar: #141414;          /* a step darker than the page, like the light theme */
+  --bar-hover: #2a2a2a;
+  --shadow: none;
+  color-scheme: dark;
 }
 
 body {
@@ -37,7 +70,7 @@ body {
   gap: 12px;
   margin: -24px -16px 28px;
   padding: 12px 24px;
-  border-bottom: 1px solid var(--border);
+  background: var(--bar);
 }
 .menu-brand {
   display: flex;
@@ -49,7 +82,7 @@ body {
   cursor: pointer;
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--accent-bright);
   letter-spacing: -0.5px;
 }
 .menu-brand:hover { opacity: 0.85; }
@@ -60,7 +93,7 @@ body {
   background: transparent;
   border: none;
   border-radius: 6px;
-  color: var(--muted);
+  color: var(--bar-text);
   font: inherit;
   font-size: 1.05rem;
   font-weight: 600;
@@ -68,7 +101,66 @@ body {
   cursor: pointer;
   transition: color 0.15s, background 0.15s;
 }
-.menu-link:hover { color: var(--text); background: var(--surface); }
+.menu-link:hover { color: #fff; background: var(--bar-hover); }
+.menu-link-page { color: #fff; }
+
+/* ? icon with About / Feedback / Contact under it */
+.menu-links { align-items: center; }
+.menu-help { position: relative; }
+.menu-help-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.menu-help-toggle:hover,
+.menu-help-toggle[aria-expanded="true"] { background: var(--bar-hover); }
+
+/* Light / dark switch */
+.menu-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--bar-text);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.menu-theme-toggle:hover { color: #fff; background: var(--bar-hover); }
+.menu-theme-label { display: none; font-size: 1.05rem; }
+/* Black-on-transparent PNGs, recolored to the menu's light grey like the ? */
+.menu-theme-icon { width: 20px; height: 20px; object-fit: contain; filter: invert(0.85); }
+.menu-theme-toggle:hover .menu-theme-icon { filter: invert(1); }
+/* The PNG is black on transparent - turn it the menu's light grey */
+.menu-help-toggle img { width: 22px; height: 22px; filter: invert(0.85); }
+.menu-help-items {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  flex-direction: column;
+  min-width: 160px;
+  padding: 6px;
+  background: var(--bar);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.menu-help-items.open { display: flex; }
+.menu-help-items .menu-link { text-align: left; }
 
 /* Unread patch notes */
 .menu-link,
@@ -80,15 +172,15 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-bright);
 }
 
 .menu-toggle {
   display: none;
   background: transparent;
-  border: 1px solid var(--border);
+  border: 1px solid #555;
   border-radius: 6px;
-  color: var(--text);
+  color: var(--bar-text);
   font-size: 1.3rem;
   line-height: 1;
   width: 40px;
@@ -110,14 +202,29 @@ body {
     align-items: stretch;
     min-width: 180px;
     padding: 6px;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--bar);
     border-radius: var(--radius);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   }
   .menu-links.open { display: flex; }
   .menu-link { text-align: left; }
-  .menu-link:hover { background: var(--border); }
+
+  /* Inside the ☰ menu the theme switch shows its label */
+  .menu-theme-toggle { justify-content: flex-start; padding: 8px 12px; height: auto; }
+  .menu-theme-label { display: inline; }
+
+  /* Inside the ☰ menu: no ?, just the links under a divider */
+  .menu-help-toggle { display: none; }
+  .menu-help-items {
+    display: flex;
+    position: static;
+    min-width: 0;
+    padding: 6px 0 0;
+    margin-top: 6px;
+    border-top: 1px solid #555;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
 
 .modal-backdrop {
@@ -131,9 +238,29 @@ body {
   z-index: 10;
 }
 .modal { max-width: 400px; max-height: 100%; overflow-y: auto; }
+/* Top-right ✕ - sticky so it stays in reach when long content scrolls;
+   the negative margin keeps it from pushing the title down */
+.modal-close {
+  position: sticky;
+  top: 0;
+  align-self: flex-end;
+  margin: -14px -10px -34px 0;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: none;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+.modal-close:hover { color: var(--text); background: var(--border); }
 .patch-list { display: flex; flex-direction: column; gap: 18px; }
 .patch-entry { display: flex; flex-direction: column; gap: 8px; }
-.patch-version { font-size: 1rem; color: var(--accent); }
+.patch-version { font-size: 1rem; color: var(--accent-text); }
 .modal-title { font-size: 1.3rem; font-weight: 800; text-align: center; }
 .modal-list { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; color: var(--muted); font-size: 0.92rem; }
 .modal-text { color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
@@ -143,7 +270,21 @@ body {
 .contact-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
 .contact-item { display: flex; flex-direction: column; gap: 2px; }
 .contact-item a { color: var(--text); text-decoration: none; word-break: break-all; }
-.contact-item a:hover { color: var(--accent); }
+.contact-item a:hover { color: var(--accent-text); }
+
+/* Shown while the server is waking up */
+.connection-notice {
+  width: 100%;
+  max-width: 480px;
+  margin: -12px 0 20px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: center;
+}
 
 /* ── Footer disclaimer ─────────────────────────────────────────────────────── */
 .disclaimer {
@@ -172,11 +313,44 @@ body {
   font-size: 2.8rem;
   font-weight: 800;
   letter-spacing: -1px;
-  color: var(--accent);
+  color: var(--accent-text);
   text-align: center;
 }
 
-.title-secondary { font-size: 2rem; margin-top: 16px; }
+.title-secondary { font-size: 2rem; }
+
+/* ── Home: play modes ─────────────────────────────────────────────────────── */
+/* Fills the space between menu bar and footer, content centered vertically */
+.home-page { flex: 1; justify-content: center; padding-bottom: 6vh; }
+
+.home-modes {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+/* Daily page: yesterday's player and their teammates */
+.yesterday { padding: 20px; gap: 6px; }
+.yesterday-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+}
+.yesterday-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.yesterday-list .chain-meta { text-align: right; }
+
+@media (max-width: 480px) {
+  .home-modes { grid-template-columns: 1fr; }
+}
 
 .subtitle {
   color: var(--muted);
@@ -190,6 +364,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow);
   padding: 28px 24px;
   display: flex;
   flex-direction: column;
@@ -199,8 +374,8 @@ body {
 /* ── Input ─────────────────────────────────────────────────────────────────── */
 .input {
   width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--field);
+  border: 1px solid var(--control-border);
   border-radius: 8px;
   color: var(--text);
   font-size: 1rem;
@@ -219,7 +394,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 10px 4px;
-  background: var(--bg);
+  background: var(--field);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--muted);
@@ -228,7 +403,7 @@ body {
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 .region-option:hover { border-color: var(--muted); color: var(--text); }
-.region-option.selected { border-color: var(--accent); color: var(--text); background: #2a1519; }
+.region-option.selected { border-color: var(--accent); color: var(--text); background: var(--lose-bg); }
 /* Fixed-size box so emoji and image icons take the same space and labels line up */
 .region-icon {
   width: 36px;
@@ -260,10 +435,10 @@ body {
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover:not(:disabled) { opacity: 0.88; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
 
-.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-.btn-secondary:hover { border-color: var(--accent); }
+.btn-secondary { background: var(--field); color: var(--text); border: 1px solid var(--control-border); }
+.btn-secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-text); }
 
 .btn-ghost { background: transparent; color: var(--muted); font-size: 0.9rem; padding: 8px 16px; }
 .btn-ghost:hover { color: var(--text); }
@@ -272,7 +447,7 @@ body {
 .btn-row .btn { flex: 1; }
 
 /* ── Error ─────────────────────────────────────────────────────────────────── */
-.error { color: var(--accent); font-size: 0.88rem; }
+.error { color: var(--accent-text); font-size: 0.88rem; }
 .notice { color: var(--muted); font-size: 0.88rem; text-align: center; }
 
 /* ── Lobby ─────────────────────────────────────────────────────────────────── */
@@ -281,7 +456,7 @@ body {
   font-weight: 800;
   letter-spacing: 8px;
   text-align: center;
-  color: var(--accent);
+  color: var(--accent-text);
   user-select: all;
   padding: 8px;
   border-radius: 6px;
@@ -300,7 +475,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 14px;
-  background: var(--bg);
+  background: var(--field);
   border: 1px solid var(--border);
   border-radius: 8px;
   font-weight: 600;
@@ -354,8 +529,8 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.player-badge.me { background: #1a3a30; color: var(--accent2); }
-.player-badge.opp { background: #3a1a1e; color: var(--accent); }
+.player-badge.me { background: var(--win-bg); color: var(--accent2); }
+.player-badge.opp { background: var(--lose-bg); color: var(--accent-text); }
 
 .player-side { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .hearts { display: flex; gap: 4px; }
@@ -384,7 +559,7 @@ body {
 .timer-bar.urgent { background: var(--accent); }
 
 .timer-number { font-size: 0.85rem; color: var(--muted); }
-.timer-number.urgent { color: var(--accent); font-weight: 700; }
+.timer-number.urgent { color: var(--accent-text); font-weight: 700; }
 
 /* Turn label */
 .turn-label {
@@ -393,7 +568,7 @@ body {
   padding: 6px 18px;
   border-radius: 20px;
 }
-.turn-label.my-turn { background: #1a3a30; color: var(--accent2); }
+.turn-label.my-turn { background: var(--win-bg); color: var(--accent2); }
 .turn-label.their-turn { background: var(--surface); color: var(--muted); }
 
 /* Current player box */
@@ -430,7 +605,7 @@ body {
 .suggestion.active { border-color: var(--accent); }
 
 .game-message {
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 0.9rem;
   text-align: center;
   min-height: 1.2em;
@@ -473,10 +648,10 @@ body {
   color: var(--muted);
 }
 
-.chain-arrow { color: var(--border); font-size: 1rem; }
+.chain-arrow { color: var(--muted); font-size: 1rem; }
 
 .chain-entry.mine .chain-player { color: var(--accent2); }
-.chain-entry.theirs .chain-player { color: var(--accent); }
+.chain-entry.theirs .chain-player { color: var(--accent-text); }
 
 /* ── GameOver ──────────────────────────────────────────────────────────────── */
 .result-banner {
@@ -487,8 +662,8 @@ body {
   padding: 20px;
   border-radius: var(--radius);
 }
-.result-banner.win { background: #1a3a30; color: var(--accent2); }
-.result-banner.lose { background: #3a1a1e; color: var(--accent); }
+.result-banner.win { background: var(--win-bg); color: var(--accent2); }
+.result-banner.lose { background: var(--lose-bg); color: var(--accent-text); }
 
 .reason-text { color: var(--muted); font-size: 0.9rem; }
 
@@ -535,10 +710,10 @@ body {
 }
 .daily-letter { font-size: 1.6rem; font-weight: 800; color: var(--muted); }
 .daily-name { font-weight: 700; }
-.daily-slot.found { background: #1a3a30; border-color: var(--accent2); }
+.daily-slot.found { background: var(--win-bg); border-color: var(--accent2); }
 .daily-slot.found .daily-name { color: var(--accent2); }
-.daily-slot.missed { background: #3a1a1e; border-color: var(--accent); }
-.daily-slot.missed .daily-name { color: var(--accent); }
+.daily-slot.missed { background: var(--lose-bg); border-color: var(--accent); }
+.daily-slot.missed .daily-name { color: var(--accent-text); }
 
 .game-message.good { color: var(--accent2); }
 
@@ -547,7 +722,7 @@ body {
 .daily-result { align-items: center; }
 .share-box {
   width: 100%;
-  background: var(--bg);
+  background: var(--field);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px;

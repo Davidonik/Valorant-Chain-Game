@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import socket from "../socket";
 import RegionPicker from "../components/RegionPicker";
-import { localDate } from "../dates";
 
-export default function Home({ onJoined, onDaily, notice }) {
+export default function Home({ onJoined, notice }) {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [mode, setMode] = useState(null); // "create" | "join" | "solo"
@@ -11,14 +10,6 @@ export default function Home({ onJoined, onDaily, notice }) {
   const [error, setError] = useState("");
   const [nameError, setNameError] = useState(false); // shown above the name box
   const [loading, setLoading] = useState(false);
-  const [yesterday, setYesterday] = useState(null); // yesterday's daily player
-
-  useEffect(() => {
-    // Fails quietly before there was a yesterday (launch day)
-    socket.emit("daily_get", { date: localDate(new Date(), -1) }, (res) => {
-      if (res.success) setYesterday(res.player);
-    });
-  }, []);
 
   // Errors belong to the screen they were shown on
   function switchMode(next) {
@@ -71,6 +62,22 @@ export default function Home({ onJoined, onDaily, notice }) {
       <h1 className="title">ValoChain</h1>
       <p className="subtitle">Chain Valorant pro players by their teammates</p>
 
+      {!mode && (
+        <div className="home-modes">
+          <button className="btn btn-primary" onClick={() => switchMode("create")}>
+            Create Room
+          </button>
+          <button className="btn btn-secondary" onClick={() => switchMode("join")}>
+            Join Room
+          </button>
+          <button className="btn btn-secondary" onClick={() => switchMode("solo")}>
+            Solo Practice
+          </button>
+        </div>
+      )}
+      {!mode && notice && <p className="notice">{notice}</p>}
+
+      {mode && (
       <div className="card">
         {/* Only 1v1 needs a name - the opponent sees it */}
         {(mode === "create" || mode === "join") && (
@@ -86,23 +93,6 @@ export default function Home({ onJoined, onDaily, notice }) {
               onChange={(e) => { setName(e.target.value); setError(""); setNameError(false); }}
             />
           </>
-        )}
-
-        {!mode && (
-          <div className="btn-row">
-            <button className="btn btn-primary" onClick={() => switchMode("create")}>
-              Create Room
-            </button>
-            <button className="btn btn-secondary" onClick={() => switchMode("join")}>
-              Join Room
-            </button>
-          </div>
-        )}
-
-        {!mode && (
-          <button className="btn btn-secondary" onClick={() => switchMode("solo")}>
-            Solo Practice
-          </button>
         )}
 
         {mode === "solo" && (
@@ -146,20 +136,7 @@ export default function Home({ onJoined, onDaily, notice }) {
         {error && <p className="error">{error}</p>}
         {notice && !error && <p className="notice">{notice}</p>}
       </div>
-
-      <h2 className="title title-secondary">Daily Pro Player</h2>
-      <p className="subtitle">A new pro player every day. Name their teammates just like Worlde.</p>
-
-      <div className="card">
-        <button className="btn btn-secondary" onClick={onDaily}>
-          Start
-        </button>
-        {yesterday && (
-          <p className="notice">
-            Yesterday's featured player: <span className="highlight">{yesterday}</span>
-          </p>
-        )}
-      </div>
+      )}
     </div>
   );
 }

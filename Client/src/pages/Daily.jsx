@@ -37,7 +37,7 @@ function timeUntilMidnight(now) {
   return `${pad(Math.floor(secs / 3600))}:${pad(Math.floor(secs / 60) % 60)}:${pad(secs % 60)}`;
 }
 
-export default function Daily({ onHome }) {
+export default function Daily() {
   const [now, setNow] = useState(Date.now());
   const [date, setDate] = useState(() => localDate());
   const [puzzle, setPuzzle] = useState(null);       // { number, player, slots, teams }
@@ -51,6 +51,7 @@ export default function Daily({ onHome }) {
   const [pending, setPending] = useState(false);
   const [copied, setCopied] = useState("");
   const [teamsAfterGame, setTeamsAfterGame] = useState(false); // shown after the end - no 💡
+  const [yesterday, setYesterday] = useState(null); // { player, answers }
   const inputRef = useRef(null);
 
   const total = puzzle?.slots.length ?? 0;
@@ -92,6 +93,19 @@ export default function Daily({ onHome }) {
       else setError(res.error || "Could not load today's challenge.");
     });
     return () => { cancelled = true; };
+  }, [date]);
+
+  // Yesterday's player and their teammates, shown under the puzzle.
+  // Fails quietly before there was a yesterday (launch day).
+  useEffect(() => {
+    const prev = localDate(new Date(), -1);
+    setYesterday(null);
+    socket.emit("daily_get", { date: prev }, (res) => {
+      if (!res.success) return;
+      socket.emit("daily_reveal", { date: prev }, (rev) => {
+        if (rev.success) setYesterday({ player: res.player, answers: rev.answers });
+      });
+    });
   }, [date]);
 
   useEffect(() => {
@@ -190,7 +204,6 @@ export default function Daily({ onHome }) {
     return (
       <div className="page">
         <p className="error">{error}</p>
-        <button className="btn btn-ghost" onClick={onHome}>Main Menu</button>
       </div>
     );
   }
@@ -201,6 +214,9 @@ export default function Daily({ onHome }) {
 
   return (
     <div className="page daily-page">
+      <h1 className="title title-secondary">Daily Pro Player</h1>
+      <p className="subtitle">A new pro player every day. Name their teammates just like Wordle.</p>
+
       <div className="daily-header">
         <span className="chain-label">Daily #{puzzle.number}</span>
         <Hearts lives={Math.max(0, progress.lives)} maxLives={MAX_LIVES} />
@@ -299,7 +315,21 @@ export default function Daily({ onHome }) {
         </div>
       )}
 
-      <button className="btn btn-ghost" onClick={onHome}>Main Menu</button>
+      {yesterday && (
+        <div className="card yesterday">
+          <span className="chain-label">Yesterday's player</span>
+          <span className="highlight">{yesterday.player}</span>
+          <ul className="yesterday-list">
+            {yesterday.answers.map((a) => (
+              <li key={a.name}>
+                <span className="missed-name">{a.name}</span>
+                <span className="chain-meta">{a.teams}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
     </div>
   );
 }

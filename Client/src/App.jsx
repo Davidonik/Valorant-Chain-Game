@@ -4,19 +4,20 @@ import Home from "./pages/Home";
 import Lobby from "./pages/Lobby";
 import Game from "./pages/Game";
 import GameOver from "./pages/GameOver";
+import Daily from "./pages/Daily";
 import MenuBar from "./components/MenuBar";
 import "./App.css";
 
-// pages: "home" | "lobby" | "game" | "gameover"
+// pages: "home" | "lobby" | "game" | "gameover" | "daily"
 
 export default function App() {
   const [page, setPage] = useState("home");
   const [playerName, setPlayerName] = useState("");
   const [room, setRoom] = useState(null);             // lobby info: code, region, host, players
-  const roomCode = room?.code ?? "";
   const [gameState, setGameState] = useState(null);   // from game_start
   const [result, setResult] = useState(null);         // from game_over
-  const [notice, setNotice] = useState("");           // message shown on the home page
+  const [notice, setNotice] = useState("");
+  const [homeKey, setHomeKey] = useState(0);           // message shown on the home page
 
   // Listen here (not in Lobby/GameOver) so the event can't arrive before a
   // page has mounted — the joiner gets game_start right after the join ack.
@@ -60,12 +61,22 @@ export default function App() {
     setResult(null);
   }
 
+  // Logo in the menu bar: leaving a live 1v1 ends it for the opponent, so ask first
+  function onLogoClick() {
+    if (page === "game" && !gameState?.solo && !window.confirm("Leave the game? Your opponent will win.")) {
+      return;
+    }
+    goHome();
+    setHomeKey((k) => k + 1); // also resets Home back to its first screen
+  }
+
   return (
     <div className="app">
-      <MenuBar />
+      <MenuBar onHome={onLogoClick} />
       {page === "home" && (
-        <Home onJoined={goToLobby} notice={notice} />
+        <Home key={homeKey} onJoined={goToLobby} onDaily={() => setPage("daily")} notice={notice} />
       )}
+      {page === "daily" && <Daily onHome={goHome} />}
       {page === "lobby" && (
         <Lobby
           room={room}
@@ -76,15 +87,12 @@ export default function App() {
       {page === "game" && (
         <Game
           playerName={playerName}
-          roomCode={roomCode}
           initialGameState={gameState}
           onGameOver={goToGameOver}
         />
       )}
       {page === "gameover" && (
         <GameOver
-          playerName={playerName}
-          roomCode={roomCode}
           result={result}
           onHome={goHome}
         />

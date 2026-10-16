@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { PATCH_NOTES } from "../patchNotes";
 import FeedbackForm from "./FeedbackForm";
+import logo from "../assets/valchainlogo.png";
 
-// Link to the spreadsheet of all players — leave empty until it's published
+// Link to the spreadsheet of all players - leave empty until it's published
 const PLAYER_SHEET_URL = "https://docs.google.com/spreadsheets/d/16RrUFvPNNuXOzFcm785uYSdBrCZQLTGGxuEO9Pxkumg/edit?usp=sharing";
 
 const CONTACT_LINKS = [
@@ -10,6 +11,18 @@ const CONTACT_LINKS = [
   { label: "GitHub", text: "Davidonik", href: "https://github.com/Davidonik" },
   { label: "Email", text: "davidphamlong0@gmail.com", href: "mailto:davidphamlong0@gmail.com" },
 ];
+
+// Red dot on "Patch Notes" until this browser has opened the newest version
+const SEEN_PATCH_KEY = "valochain-seen-patch";
+const LATEST_PATCH = PATCH_NOTES[0]?.version ?? "";
+
+function readSeenPatch() {
+  try {
+    return localStorage.getItem(SEEN_PATCH_KEY) ?? "";
+  } catch {
+    return LATEST_PATCH; // storage blocked - no way to clear the dot, so don't show it
+  }
+}
 
 const MENU_ITEMS = [
   ["about", "About"],
@@ -19,9 +32,11 @@ const MENU_ITEMS = [
   ["contact", "Contact"],
 ];
 
-export default function MenuBar() {
+export default function MenuBar({ onHome }) {
   const [open, setOpen] = useState(null); // "about" | "howto" | "patch" | "feedback" | "contact"
   const [menuOpen, setMenuOpen] = useState(false); // phone dropdown
+  const [seenPatch, setSeenPatch] = useState(readSeenPatch);
+  const hasNewPatch = seenPatch !== LATEST_PATCH;
 
   useEffect(() => {
     if (!open && !menuOpen) return;
@@ -38,12 +53,27 @@ export default function MenuBar() {
   function openSection(key) {
     setOpen(key);
     setMenuOpen(false);
+    if (key === "patch" && hasNewPatch) {
+      setSeenPatch(LATEST_PATCH);
+      try {
+        localStorage.setItem(SEEN_PATCH_KEY, LATEST_PATCH);
+      } catch {
+        // storage blocked - the dot just comes back next visit
+      }
+    }
   }
 
   return (
     <>
       <nav className="menu-bar">
-        <span className="menu-brand">ValoChain</span>
+        <button
+          className="menu-brand"
+          onClick={() => { setMenuOpen(false); onHome(); }}
+          aria-label="ValoChain - back to the home page"
+        >
+          <img className="menu-logo" src={logo} alt="" />
+          ValoChain
+        </button>
 
         {/* Shown instead of the links on narrow screens (see App.css) */}
         <button
@@ -53,12 +83,14 @@ export default function MenuBar() {
           onClick={() => setMenuOpen((o) => !o)}
         >
           {menuOpen ? "✕" : "☰"}
+          {hasNewPatch && !menuOpen && <span className="new-dot" aria-label="New patch notes" />}
         </button>
 
         <div className={`menu-links ${menuOpen ? "open" : ""}`}>
           {MENU_ITEMS.map(([key, label]) => (
             <button key={key} className="menu-link" onClick={() => openSection(key)}>
               {label}
+              {key === "patch" && hasNewPatch && <span className="new-dot" aria-label="New" />}
             </button>
           ))}
         </div>
@@ -106,12 +138,25 @@ export default function MenuBar() {
             {open === "howto" && (
               <>
                 <h2 className="modal-title">How to Play</h2>
+                <h3 className="patch-version">1v1 mode</h3>
                 <ul className="modal-list">
-                  <li>The game opens with a random pro player.</li>
-                  <li>Player 1 names someone who is/was their teammate.</li>
-                  <li>That player becomes the next link, and player 2 goes.</li>
-                  <li>Each player can only be used once per game.</li>
-                  <li>Run out of time, no heart left (each incorrect guess = -1 heart; 3 hearts total), or get left with no teammates to name, and you lose.</li>
+                  <li>The game opens with a random pro player</li>
+                  <li>Player 1 names someone who is/was their teammate</li>
+                  <li>That player becomes the next link, and player 2 goes</li>
+                  <li>Each player can only be used once per game</li>
+                  <li>Run out of time, no hearts left (each incorrect guess = -1 heart; 3 hearts total), or get left with no teammates, and you lose</li>
+                </ul>
+                <h3 className="patch-version">Solo Practice</h3>
+                <ul className="modal-list">
+                  <li>Same rules as 1v1, but you name every link yourself.</li>
+                  <li>Your score is the length of your chain - your best is saved on this device.</li>
+                </ul>
+                <h3 className="patch-version">Daily Challenge</h3>
+                <ul className="modal-list">
+                  <li>Every day at midnight a new pro player is featured - the same one for everyone (something like Wordle)</li>
+                  <li>The grid shows the first letter of each of their teammates and name as many as you can, in any order</li>
+                  <li>3 hearts, each wrong guess costs one, no time limit</li>
+                  <li>Your score is the teammates you named</li>
                 </ul>
               </>
             )}
@@ -124,7 +169,7 @@ export default function MenuBar() {
                     <section key={p.version} className="patch-entry">
                       <h3 className="patch-version">
                         v{p.version}
-                        {p.date && <span className="chain-meta"> — {p.date}</span>}
+                        {p.date && <span className="chain-meta"> - {p.date}</span>}
                       </h3>
                       <ul className="modal-list">
                         {p.changes.map((c) => (

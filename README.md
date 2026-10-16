@@ -1,12 +1,14 @@
-# ValoChain 🎮
+# ValoChain
  
-A real-time 2-player web game where you chain Valorant pro players by their teammates. Name a player who was teammates with the current player — run out of options or time and you lose.
+A 2-player web game where you chain Valorant pro players by their teammates. Name a player who was teammates with the current player - run out of options, life or time and you lose.
  
-**[▶ Play Now](https://valorantchain.vercel.app)**
+**[Play Now](https://valochain.vercel.app)**
  
 ---
  
-## How to Play
+## Gamemode
+
+# 1v1 mode
  
 1. One player creates a room and shares the 5-letter code
 2. The other player joins with the code
@@ -14,6 +16,26 @@ A real-time 2-player web game where you chain Valorant pro players by their team
 4. Players take turns naming a pro who was teammates with the current player
 5. You have **15 seconds** per turn
 6. Lose if you: run out of time, lose you hp (incorrect guess = -1 hp, 3 hp total)
+
+# Solo Practice mode
+
+Same rules as 1v1 (15 seconds per link, 3 lives), but you build the whole chain yourself. Your score is the chain length, and your best is saved in your browser.
+
+# Daily Challenge mode
+
+Every day at midnight (your local time) a new pro player is featured - the same one for everyone (something like Wordle).
+
+- The grid shows the first letter of each of their teammates; name as many as you can, in any order
+- 3 lives (each wrong guess = -1), no time limit
+- Score = teammates found / total, shareable Wordle-style:
+
+```
+ValoChain Daily #12 - 7/11
+🟩🟩🟩🟩🟩🟩🟩🟥🟥🟥🟥
+```
+
+# Solo mode
+
 ## Rules
  
 - Any player who appeared on the same **org roster** counts as a teammate (not just tournament rosters)
@@ -37,6 +59,10 @@ A real-time 2-player web game where you chain Valorant pro players by their team
  
 ### Prerequisites
 - Node.js 18+
+```bash
+winget install OpenJS.NodeJS.LTS
+```
+
 ### Setup
  
 ```bash
@@ -54,10 +80,10 @@ cd ../client && npm install
 ### Run locally
  
 ```bash
-# Terminal 1 — start the server
+# Terminal 1 - start the server
 cd server && npm run dev
  
-# Terminal 2 — start the client
+# Terminal 2 - start the client
 cd client && npm run dev
 ```
  
@@ -77,7 +103,7 @@ VITE_SERVER_URL=http://localhost:3001
 ### Backend (Railway)
 1. Connect your GitHub repo to [Railway](https://railway.app)
 2. Set the root directory to `server/`
-3. Railway auto-detects Node — no extra config needed
+3. Railway auto-detects Node - no extra config needed
 4. Copy the Railway URL (e.g. `https://valochain-production.up.railway.app`)
 ### Frontend (Vercel)
 1. Import the repo on [Vercel](https://vercel.com)
@@ -99,6 +125,7 @@ origin: "https://your-vercel-url.vercel.app"
 │   ├── index.js          # Express + Socket.io setup
 │   ├── roomManager.js    # Room creation, game flow, socket events
 │   ├── gameLogic.js      # Validation, player lookup, game rules
+│   ├── daily.js          # Daily Challenge: player of the day, guesses
 │   └── players.js        # Pro player teammate database
 └── client/
     ├── src/
@@ -106,7 +133,8 @@ origin: "https://your-vercel-url.vercel.app"
     │   │   ├── Home.jsx      # Create / join room
     │   │   ├── Lobby.jsx     # Waiting for opponent
     │   │   ├── Game.jsx      # Main game screen
-    │   │   └── GameOver.jsx  # Results + rematch
+    │   │   ├── GameOver.jsx  # Results + rematch
+    │   │   └── Daily.jsx     # Daily Challenge screen
     │   └── components/
     │       ├── Timer.jsx     # 15s countdown bar
     │       └── Chain.jsx     # Player chain display
@@ -117,7 +145,7 @@ origin: "https://your-vercel-url.vercel.app"
  
 ## Adding Players to the Database
  
-Edit `server/players.js`. Each player needs a symmetric entry — both sides of every teammate relationship must be listed:
+Edit `server/players.js`. Each player needs a symmetric entry - both sides of every teammate relationship must be listed:
  
 ```js
 PlayerName: {

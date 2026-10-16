@@ -39,7 +39,22 @@ body {
   padding: 12px 24px;
   border-bottom: 1px solid var(--border);
 }
-.menu-brand { font-size: 1.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+.menu-brand {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+.menu-brand:hover { opacity: 0.85; }
+/* The image has empty space on its right edge - pull the text in over it */
+.menu-logo { height: 36px; width: auto; margin-right: -4px; }
 .menu-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
 .menu-link {
   background: transparent;
@@ -54,6 +69,19 @@ body {
   transition: color 0.15s, background 0.15s;
 }
 .menu-link:hover { color: var(--text); background: var(--surface); }
+
+/* Unread patch notes */
+.menu-link,
+.menu-toggle { position: relative; }
+.new-dot {
+  position: absolute;
+  top: 6px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
 
 .menu-toggle {
   display: none;
@@ -147,6 +175,8 @@ body {
   color: var(--accent);
   text-align: center;
 }
+
+.title-secondary { font-size: 2rem; margin-top: 16px; }
 
 .subtitle {
   color: var(--muted);
@@ -279,7 +309,6 @@ body {
 
 .hint { text-align: center; color: var(--muted); font-size: 0.82rem; }
 .hint.copied { color: var(--accent2); }
-.waiting-text { text-align: center; color: var(--muted); }
 
 .fun-fact {
   width: 100%;
@@ -333,6 +362,7 @@ body {
 .heart { width: 20px; height: 20px; object-fit: contain; }
 
 .vs-badge { font-weight: 800; color: var(--muted); font-size: 0.85rem; }
+.solo-score { font-size: 1.6rem; font-weight: 800; color: var(--accent2); line-height: 1; }
 
 /* Timer */
 .timer-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -352,7 +382,6 @@ body {
   transition: width 1s linear, background 0.3s;
 }
 .timer-bar.urgent { background: var(--accent); }
-.timer-bar.active { }
 
 .timer-number { font-size: 0.85rem; color: var(--muted); }
 .timer-number.urgent { color: var(--accent); font-weight: 700; }
@@ -480,6 +509,54 @@ body {
 .missed-answers h3,
 .chain-recap h3 { text-align: center; color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
 
+/* ── Daily Challenge ───────────────────────────────────────────────────────── */
+.daily-header { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+
+.daily-grid {
+  width: 100%;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+.daily-slot {
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.daily-letter { font-size: 1.6rem; font-weight: 800; color: var(--muted); }
+.daily-name { font-weight: 700; }
+.daily-slot.found { background: #1a3a30; border-color: var(--accent2); }
+.daily-slot.found .daily-name { color: var(--accent2); }
+.daily-slot.missed { background: #3a1a1e; border-color: var(--accent); }
+.daily-slot.missed .daily-name { color: var(--accent); }
+
+.game-message.good { color: var(--accent2); }
+
+.daily-hint { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+.daily-result { align-items: center; }
+.share-box {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: inherit;
+  text-align: center;
+  white-space: pre-wrap;
+  user-select: all;
+}
+
 /* ── Fonts ─────────────────────────────────────────────────────────────────── */
 /* Kept last so it overrides the "font: inherit" in the rules above */
 :root {
@@ -513,6 +590,8 @@ body {
 .player-badge,
 .highlight,
 .missed-name,
+.daily-name,
+.daily-letter,
 .lobby-player,
 .suggestion {
   font-family: var(--font-ui);

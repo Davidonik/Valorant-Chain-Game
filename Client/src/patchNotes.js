@@ -4,9 +4,9 @@
 // ---------------------------------------------------------------------------
 
 export const PATCH_NOTES = [
-    {
+  {
     version: "1.1",
-    date: "",
+    date: "October 15th 2026",
     changes: [
       "New: Daily Challenge - a new featured pro player every day at midnight, the same for everyone. Name as many of their teammates as you can from the first letters (3 lives, no time limit)",
       "Daily Challenge: use \"Show teams\" if you're stuck, and share your result Wordle-style",
@@ -20,7 +20,7 @@ export const PATCH_NOTES = [
 
   {
     version: "1.0",
-    date: "",
+    date: "October 15th 2026",
     changes: [
       "First release of ValoChain",
     ],

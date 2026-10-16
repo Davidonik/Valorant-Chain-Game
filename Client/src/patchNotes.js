@@ -8,7 +8,7 @@ export const PATCH_NOTES = [
     version: "1.11",
     date: "October 16, 2026",
     changes: [
-      "Updated UI and fix syntax."
+      "Updated UI and fix syntax"
     ],
   },
 

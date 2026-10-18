@@ -160,6 +160,7 @@ function activePlayerLoses(io, code, room, reason) {
   io.to(code).emit("game_over", {
     reason,
     solo: room.solo,
+    region: room.region,
     currentPlayer,
     missedAnswers,
     loserId: loser.id,
@@ -341,6 +342,7 @@ function handleSocketEvents(io, socket) {
       io.to(code).emit("game_over", {
         reason: "no_moves",
         solo: true,
+        region: room.region,
         seedPlayer: room.seedPlayer,
         chain: room.chain,
       });

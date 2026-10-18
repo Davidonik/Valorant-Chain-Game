@@ -42,7 +42,7 @@ export default function GameOver({ result, onHome }) {
       setVotes(v);
     }
     function onOpponentLeft() {
-      setOpponentLeft(true);
+      if (!result?.solo) setOpponentLeft(true); // solo has no opponent
     }
     socket.on("rematch_vote", onRematchVote);
     socket.on("opponent_left", onOpponentLeft);
@@ -50,11 +50,20 @@ export default function GameOver({ result, onHome }) {
       socket.off("rematch_vote", onRematchVote);
       socket.off("opponent_left", onOpponentLeft);
     };
-  }, []);
+  }, [result?.solo]);
 
   function handleRematch() {
     if (voted) return;
     setVoted(true);
+
+    // Solo: start a fresh game instead of reusing the old room, which may be
+    // gone (expired, server restarted, or the connection dropped and came back)
+    if (solo) {
+      socket.emit("create_solo", { region: result?.region ?? null }, (res) => {
+        if (!res?.success) setVoted(false);
+      });
+      return;
+    }
     socket.emit("rematch_request");
   }
 

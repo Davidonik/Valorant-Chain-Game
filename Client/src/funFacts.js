@@ -18,5 +18,6 @@ export const FUN_FACTS = [
   "There is a pee bottle in haven A site Heaven which is some sorta reference to Team Fortress 2",
   "Jett is the shortest agent in the game.",
   "Yoru’s teleport takes approximately 1.25 seconds to complete.",
-  "FNS is the GOAT ... maybe not anymore."
+  "FNS is the GOAT ... maybe not anymore.",
+  "Skye's flash is a hawk her stun is a tasmanian tiger and her ult are jellyfishes."
 ];

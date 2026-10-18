@@ -5,6 +5,14 @@
 
 export const PATCH_NOTES = [
   {
+    version: "1.12",
+    date: "October 16, 2026",
+    changes: [
+      "Fixed Bug clicks where after clicking \"Play again\" for the solo mode it returned \“Your opponent left\""
+    ],
+  },
+
+  {
     version: "1.11",
     date: "October 16, 2026",
     changes: [
